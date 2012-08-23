@@ -23,7 +23,10 @@ import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.orange.labs.uk.orangizer.R;
+import com.orange.labs.uk.orangizer.dependencies.OrangizerDependencyResolver;
+import com.orange.labs.uk.orangizer.dependencies.OrangizerDependencyResolverImpl;
 import com.orange.labs.uk.orangizer.models.Event;
+import com.orange.labs.uk.orangizer.settings.SettingsManager;
 import com.orange.labs.uk.orangizer.utils.Constants;
 import com.orange.labs.uk.orangizer.utils.Logger;
 
@@ -31,6 +34,9 @@ public class EventsActivity extends SherlockActivity {
 
 	private static final Logger sLogger = Logger.getLogger(EventsActivity.class);
 
+	/** Used to store access token */
+	private SettingsManager mSettingsManager;
+	
 	private Facebook mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
 
 	private AsyncFacebookRunner mAsyncRunner;
@@ -39,13 +45,37 @@ public class EventsActivity extends SherlockActivity {
 	
 	private List<Event> mEvents = new ArrayList<Event>();
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_events);
 
-		mFacebook.authorize(this, new String[] { "user_events" }, new FacebookDialogListener());
+		OrangizerDependencyResolver resolver = OrangizerDependencyResolverImpl.getInstance();
+		mSettingsManager = resolver.getSettingsManager();
+		
+		String accessToken = mSettingsManager.getFacebookAccessToken();
+		long accessExpires = mSettingsManager.getFacebookAccessExpires();
+		
+		if (accessToken != null) {
+			mFacebook.setAccessToken(accessToken);
+		}
+		
+		if (accessExpires != 0) {
+			mFacebook.setAccessExpires(accessExpires);
+		}
+		
+		if (!mFacebook.isSessionValid()) {
+			mFacebook.authorize(this, new String[] { "user_events" }, new FacebookDialogListener());
+		}
+		
 		mAsyncRunner = new AsyncFacebookRunner(mFacebook);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mFacebook.extendAccessTokenIfNeeded(this, null);
 	}
 
 	@Override
@@ -67,6 +97,10 @@ public class EventsActivity extends SherlockActivity {
 		@Override
 		public void onComplete(Bundle values) {
 			sLogger.i("Facebook Authentication Succeeded");
+			// Store access token and expires
+			mSettingsManager.setFacebookToken(mFacebook.getAccessToken());
+			mSettingsManager.setFacebookTokenExpires(mFacebook.getAccessExpires());
+			
 			// Grab events from user profile
 			mAsyncRunner.request("me/events", new EventsRequestListener());
 		}
