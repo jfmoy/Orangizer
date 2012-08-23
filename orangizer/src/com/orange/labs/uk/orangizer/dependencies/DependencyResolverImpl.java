@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.orange.labs.uk.orangizer.settings.SettingsManager;
 
-public class OrangizerDependencyResolverImpl implements OrangizerDependencyResolver {
+public class DependencyResolverImpl implements DependencyResolver {
 
-	private static OrangizerDependencyResolver sInstance;
+	private static DependencyResolver sInstance;
 
 	private Context mAppContext;
 
@@ -14,11 +14,11 @@ public class OrangizerDependencyResolverImpl implements OrangizerDependencyResol
 
 	public static void initialize(Context appContext) {
 		if (sInstance == null) {
-			sInstance = new OrangizerDependencyResolverImpl(appContext);
+			sInstance = new DependencyResolverImpl(appContext);
 		}
 	}
 
-	public static OrangizerDependencyResolver getInstance() {
+	public static DependencyResolver getInstance() {
 		if (sInstance == null) {
 			throw new IllegalStateException(
 					"Dependency resolver should be initialized before being accessed");
@@ -26,7 +26,7 @@ public class OrangizerDependencyResolverImpl implements OrangizerDependencyResol
 		return sInstance;
 	}
 
-	private OrangizerDependencyResolverImpl(Context appContext) {
+	private DependencyResolverImpl(Context appContext) {
 		mAppContext = appContext;
 	}
 

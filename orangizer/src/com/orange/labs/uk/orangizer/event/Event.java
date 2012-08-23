@@ -1,9 +1,11 @@
-package com.orange.labs.uk.orangizer.models;
+package com.orange.labs.uk.orangizer.event;
 
 import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.database.Cursor;
 
 import com.orange.labs.uk.orangizer.utils.Logger;
 
@@ -102,8 +104,43 @@ public class Event {
 			
 			return this;
 		}
+		
+		public Builder setId(String id) {
+			mId = id;
+			return this;
+		}
+		
+		public Builder setName(String name) {
+			mName = name;
+			return this;
+		}
+		
+		public Builder setDescription(String description) {
+			mDescription = description;
+			return this;
+		}
+		
+		public Builder setStartingDate(Date startingDate) {
+			mStartingDate = startingDate;
+			return this;
+		}
+		
+		public Builder setEndingDate(Date endingDate) {
+			mEndingDate = endingDate;
+			return this;
+		}
+		
+		public Builder setAddress(String address) {
+			mAddress = address;
+			return this;
+		}
+		
+		public Builder setStatus(RsvpStatus status) {
+			mStatus = status;
+			return this;
+		}
 
-		public Event getEvent() {
+		public Event build() {
 			return new Event(mId, mName, mDescription, mStartingDate, mEndingDate, mAddress,
 					mStatus);
 		}

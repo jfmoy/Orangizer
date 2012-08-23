@@ -23,9 +23,9 @@ import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.orange.labs.uk.orangizer.R;
-import com.orange.labs.uk.orangizer.dependencies.OrangizerDependencyResolver;
-import com.orange.labs.uk.orangizer.dependencies.OrangizerDependencyResolverImpl;
-import com.orange.labs.uk.orangizer.models.Event;
+import com.orange.labs.uk.orangizer.dependencies.DependencyResolver;
+import com.orange.labs.uk.orangizer.dependencies.DependencyResolverImpl;
+import com.orange.labs.uk.orangizer.event.Event;
 import com.orange.labs.uk.orangizer.settings.SettingsManager;
 import com.orange.labs.uk.orangizer.utils.Constants;
 import com.orange.labs.uk.orangizer.utils.Logger;
@@ -50,7 +50,7 @@ public class EventsActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_events);
 
-		OrangizerDependencyResolver resolver = OrangizerDependencyResolverImpl.getInstance();
+		DependencyResolver resolver = DependencyResolverImpl.getInstance();
 		mSettingsManager = resolver.getSettingsManager();
 
 		String accessToken = mSettingsManager.getFacebookAccessToken();
@@ -159,7 +159,7 @@ public class EventsActivity extends SherlockActivity {
 				int eventsNumber = jsonArray.length();
 				for (int i = 0; i < eventsNumber; i++) {
 					Event event = new Event.Builder().fromJsonObject(jsonArray.getJSONObject(i))
-							.getEvent();
+							.build();
 					mEvents.add(event);
 				}
 				sLogger.d(mEvents.toString());

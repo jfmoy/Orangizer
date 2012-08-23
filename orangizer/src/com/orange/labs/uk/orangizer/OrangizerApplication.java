@@ -1,6 +1,6 @@
 package com.orange.labs.uk.orangizer;
 
-import com.orange.labs.uk.orangizer.dependencies.OrangizerDependencyResolverImpl;
+import com.orange.labs.uk.orangizer.dependencies.DependencyResolverImpl;
 
 import android.app.Application;
 
@@ -11,7 +11,7 @@ public class OrangizerApplication extends Application {
 		super.onCreate();
 		
 		// Simply initialize dependency resolver
-		OrangizerDependencyResolverImpl.initialize(getApplicationContext());
+		DependencyResolverImpl.initialize(getApplicationContext());
 	}
 	
 }

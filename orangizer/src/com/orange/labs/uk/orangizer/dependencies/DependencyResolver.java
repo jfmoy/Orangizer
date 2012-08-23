@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.orange.labs.uk.orangizer.settings.SettingsManager;
 
-public interface OrangizerDependencyResolver {
+public interface DependencyResolver {
 
 	/** Returns the application {@link Context} */
 	public Context getApplicationContext();

@@ -1,4 +1,4 @@
-package com.orange.labs.uk.orangizer.models;
+package com.orange.labs.uk.orangizer.event;
 
 public enum RsvpStatus {
 	ATTENDING("attending");
