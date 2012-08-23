@@ -36,15 +36,14 @@ public class EventsActivity extends SherlockActivity {
 
 	/** Used to store access token */
 	private SettingsManager mSettingsManager;
-	
+
 	private Facebook mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
 
 	private AsyncFacebookRunner mAsyncRunner;
-	
-	private ListView mListView;
-	
-	private List<Event> mEvents = new ArrayList<Event>();
 
+	private ListView mListView;
+
+	private List<Event> mEvents = new ArrayList<Event>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,29 +52,50 @@ public class EventsActivity extends SherlockActivity {
 
 		OrangizerDependencyResolver resolver = OrangizerDependencyResolverImpl.getInstance();
 		mSettingsManager = resolver.getSettingsManager();
-		
+
 		String accessToken = mSettingsManager.getFacebookAccessToken();
 		long accessExpires = mSettingsManager.getFacebookAccessExpires();
-		
+
 		if (accessToken != null) {
 			mFacebook.setAccessToken(accessToken);
 		}
-		
+
 		if (accessExpires != 0) {
 			mFacebook.setAccessExpires(accessExpires);
 		}
-		
+
 		if (!mFacebook.isSessionValid()) {
 			mFacebook.authorize(this, new String[] { "user_events" }, new FacebookDialogListener());
 		}
-		
+
 		mAsyncRunner = new AsyncFacebookRunner(mFacebook);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mFacebook.extendAccessTokenIfNeeded(this, null);
+		if (mFacebook.shouldExtendAccessToken()) {
+			mFacebook.extendAccessTokenIfNeeded(this, new Facebook.ServiceListener() {
+
+				@Override
+				public void onFacebookError(FacebookError e) {
+					sLogger.w(e.toString());
+				}
+
+				@Override
+				public void onError(Error e) {
+					sLogger.w(e.toString());
+				}
+
+				@Override
+				public void onComplete(Bundle values) {
+					fetchFacebookEvents();
+				}
+			});
+		} else {
+			fetchFacebookEvents();
+		}
+
 	}
 
 	@Override
@@ -92,6 +112,11 @@ public class EventsActivity extends SherlockActivity {
 		return true;
 	}
 
+	/** Grab events from user profile */
+	private void fetchFacebookEvents() {
+		mAsyncRunner.request("me/events", new EventsRequestListener());
+	}
+
 	private class FacebookDialogListener implements DialogListener {
 
 		@Override
@@ -100,21 +125,18 @@ public class EventsActivity extends SherlockActivity {
 			// Store access token and expires
 			mSettingsManager.setFacebookToken(mFacebook.getAccessToken());
 			mSettingsManager.setFacebookTokenExpires(mFacebook.getAccessExpires());
-			
-			// Grab events from user profile
-			mAsyncRunner.request("me/events", new EventsRequestListener());
+
+			fetchFacebookEvents();
 		}
 
 		@Override
 		public void onFacebookError(FacebookError e) {
-			// TODO Auto-generated method stub
-
+			sLogger.w(e.toString());
 		}
 
 		@Override
 		public void onError(DialogError e) {
-			// TODO Auto-generated method stub
-
+			sLogger.w(e.toString());
 		}
 
 		@Override
@@ -148,26 +170,22 @@ public class EventsActivity extends SherlockActivity {
 
 		@Override
 		public void onIOException(IOException e, Object state) {
-			// TODO Auto-generated method stub
-
+			sLogger.w(e.toString());
 		}
 
 		@Override
 		public void onFileNotFoundException(FileNotFoundException e, Object state) {
-			// TODO Auto-generated method stub
-
+			sLogger.w(e.toString());
 		}
 
 		@Override
 		public void onMalformedURLException(MalformedURLException e, Object state) {
-			// TODO Auto-generated method stub
-
+			sLogger.w(e.toString());
 		}
 
 		@Override
 		public void onFacebookError(FacebookError e, Object state) {
-			// TODO Auto-generated method stub
-
+			sLogger.w(e.toString());
 		}
 
 	}
