@@ -1,0 +1,11 @@
+# Eclipse Specific
+.project
+.metadata
+local.properties
+.classpath
+.settings/
+tmp/
+
+# Android Specific
+bin/
+gen/
