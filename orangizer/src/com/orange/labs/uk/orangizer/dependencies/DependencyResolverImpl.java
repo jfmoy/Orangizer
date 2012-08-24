@@ -2,9 +2,13 @@ package com.orange.labs.uk.orangizer.dependencies;
 
 import android.content.Context;
 
+import com.facebook.android.Facebook;
 import com.orange.labs.uk.orangizer.db.DatabaseHelper;
 import com.orange.labs.uk.orangizer.event.EventsDatabase;
+import com.orange.labs.uk.orangizer.event.FacebookEventFetcher;
+import com.orange.labs.uk.orangizer.fetch.EventFetcher;
 import com.orange.labs.uk.orangizer.settings.SettingsManager;
+import com.orange.labs.uk.orangizer.utils.Constants;
 
 public class DependencyResolverImpl implements DependencyResolver {
 
@@ -15,6 +19,8 @@ public class DependencyResolverImpl implements DependencyResolver {
 	private SettingsManager mSettingsManager;
 	private DatabaseHelper mDbHelper;
 	private EventsDatabase mEventsDatabase;
+	
+	private final Facebook mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
 
 	public static void initialize(Context appContext) {
 		if (sInstance == null) {
@@ -53,6 +59,16 @@ public class DependencyResolverImpl implements DependencyResolver {
 			mEventsDatabase = new EventsDatabase(getDatabaseHelper());
 		}
 		return mEventsDatabase;
+	}
+	
+	@Override
+	public Facebook getFacebook() {
+		return mFacebook;
+	}
+	
+	@Override
+	public EventFetcher getFacebookEventsFetcher() {
+		return new FacebookEventFetcher(getFacebook(), getEventsDatabase());
 	}
 	
 	private DatabaseHelper getDatabaseHelper() {

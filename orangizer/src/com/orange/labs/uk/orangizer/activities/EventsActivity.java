@@ -1,14 +1,6 @@
 package com.orange.labs.uk.orangizer.activities;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,18 +8,17 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.orange.labs.uk.orangizer.R;
+import com.orange.labs.uk.orangizer.callback.Callback;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolver;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolverImpl;
 import com.orange.labs.uk.orangizer.event.Event;
+import com.orange.labs.uk.orangizer.fetch.EventFetcher;
 import com.orange.labs.uk.orangizer.settings.SettingsManager;
-import com.orange.labs.uk.orangizer.utils.Constants;
 import com.orange.labs.uk.orangizer.utils.Logger;
 
 public class EventsActivity extends SherlockActivity {
@@ -37,21 +28,23 @@ public class EventsActivity extends SherlockActivity {
 	/** Used to store access token */
 	private SettingsManager mSettingsManager;
 
-	private Facebook mFacebook = new Facebook(Constants.FACEBOOK_APP_ID);
-
-	private AsyncFacebookRunner mAsyncRunner;
-
+	private DependencyResolver mDependencyResolver;
+	
+	private Facebook mFacebook;
+	
 	private ListView mListView;
 
-	private List<Event> mEvents = new ArrayList<Event>();
+	private List<Event> mEvents;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_events);
 
-		DependencyResolver resolver = DependencyResolverImpl.getInstance();
-		mSettingsManager = resolver.getSettingsManager();
+		mDependencyResolver = DependencyResolverImpl.getInstance();
+		mSettingsManager = mDependencyResolver.getSettingsManager();
+		mFacebook = mDependencyResolver.getFacebook();
+		
 
 		String accessToken = mSettingsManager.getFacebookAccessToken();
 		long accessExpires = mSettingsManager.getFacebookAccessExpires();
@@ -68,7 +61,6 @@ public class EventsActivity extends SherlockActivity {
 			mFacebook.authorize(this, new String[] { "user_events" }, new FacebookDialogListener());
 		}
 
-		mAsyncRunner = new AsyncFacebookRunner(mFacebook);
 	}
 
 	@Override
@@ -114,7 +106,18 @@ public class EventsActivity extends SherlockActivity {
 
 	/** Grab events from user profile */
 	private void fetchFacebookEvents() {
-		mAsyncRunner.request("me/events", new EventsRequestListener());
+		mDependencyResolver.getFacebookEventsFetcher().fetch(new Callback<List<Event>>() {
+			
+			@Override
+			public void onSuccess(List<Event> result) {
+				mEvents = result;
+			}
+			
+			@Override
+			public void onFailure(Exception e) {
+				//TODO show error message to the user
+			}
+		});
 	}
 
 	private class FacebookDialogListener implements DialogListener {
@@ -141,52 +144,8 @@ public class EventsActivity extends SherlockActivity {
 
 		@Override
 		public void onCancel() {
-			// TODO Auto-generated method stub
-
+			
 		}
-
 	}
 
-	private class EventsRequestListener implements RequestListener {
-
-		@Override
-		public void onComplete(String response, Object state) {
-			sLogger.d(response);
-			try {
-				JSONObject json = new JSONObject(response);
-				JSONArray jsonArray = json.getJSONArray("data");
-
-				int eventsNumber = jsonArray.length();
-				for (int i = 0; i < eventsNumber; i++) {
-					Event event = new Event.Builder().fromJsonObject(jsonArray.getJSONObject(i))
-							.build();
-					mEvents.add(event);
-				}
-				sLogger.d(mEvents.toString());
-			} catch (JSONException e) {
-				sLogger.w(e.getMessage());
-			}
-		}
-
-		@Override
-		public void onIOException(IOException e, Object state) {
-			sLogger.w(e.toString());
-		}
-
-		@Override
-		public void onFileNotFoundException(FileNotFoundException e, Object state) {
-			sLogger.w(e.toString());
-		}
-
-		@Override
-		public void onMalformedURLException(MalformedURLException e, Object state) {
-			sLogger.w(e.toString());
-		}
-
-		@Override
-		public void onFacebookError(FacebookError e, Object state) {
-			sLogger.w(e.toString());
-		}
-
-	}
 }

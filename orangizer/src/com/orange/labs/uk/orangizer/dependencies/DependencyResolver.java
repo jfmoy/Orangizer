@@ -2,7 +2,9 @@ package com.orange.labs.uk.orangizer.dependencies;
 
 import android.content.Context;
 
+import com.facebook.android.Facebook;
 import com.orange.labs.uk.orangizer.event.EventsDatabase;
+import com.orange.labs.uk.orangizer.fetch.EventFetcher;
 import com.orange.labs.uk.orangizer.settings.SettingsManager;
 
 public interface DependencyResolver {
@@ -15,5 +17,11 @@ public interface DependencyResolver {
 	
 	/** Return the Events Database used */
 	public EventsDatabase getEventsDatabase();
+	
+	/** Return the Facebook object used to communicating with their platform */
+	public Facebook getFacebook();
+	
+	/** Return the Facebook Events Fetcher */
+	public EventFetcher getFacebookEventsFetcher();
 
 }
