@@ -2,6 +2,8 @@ package com.orange.labs.uk.orangizer.dependencies;
 
 import android.content.Context;
 
+import com.orange.labs.uk.orangizer.db.DatabaseHelper;
+import com.orange.labs.uk.orangizer.event.EventsDatabase;
 import com.orange.labs.uk.orangizer.settings.SettingsManager;
 
 public class DependencyResolverImpl implements DependencyResolver {
@@ -11,6 +13,8 @@ public class DependencyResolverImpl implements DependencyResolver {
 	private Context mAppContext;
 
 	private SettingsManager mSettingsManager;
+	private DatabaseHelper mDbHelper;
+	private EventsDatabase mEventsDatabase;
 
 	public static void initialize(Context appContext) {
 		if (sInstance == null) {
@@ -41,6 +45,21 @@ public class DependencyResolverImpl implements DependencyResolver {
 			mSettingsManager = new SettingsManager(getApplicationContext());
 		}
 		return mSettingsManager;
+	}
+	
+	@Override
+	public EventsDatabase getEventsDatabase() {
+		if (mEventsDatabase == null) {
+			mEventsDatabase = new EventsDatabase(getDatabaseHelper());
+		}
+		return mEventsDatabase;
+	}
+	
+	private DatabaseHelper getDatabaseHelper() {
+		if (mDbHelper == null) {
+			mDbHelper = new DatabaseHelper(getApplicationContext());
+		}
+		return mDbHelper;
 	}
 
 }

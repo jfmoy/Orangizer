@@ -21,10 +21,10 @@ package com.orange.labs.uk.orangizer.db;
  */
 public interface DatabaseColumn {
     /** The name of the column. */
-    public String getColumnName();
+    public String getName();
 
     /** The type of the column in the SQLite database. */
-    public String getColumnType();
+    public String getType();
 
     /** The version of the database in which this column was introduced. */
     public int getSinceVersion();

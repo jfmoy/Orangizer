@@ -25,9 +25,9 @@ public class TableCreator {
 				builder.append("ALTER TABLE ");
 				builder.append(mName);
 				builder.append(" ADD COLUMN ");
-				builder.append(column.getColumnName());
+				builder.append(column.getName());
 				builder.append(" ");
-				builder.append(column.getColumnType());
+				builder.append(column.getType());
 				builder.append(";");
 			}
 		}
@@ -41,9 +41,9 @@ public class TableCreator {
 				if (builder.length() != 0) {
 					builder.append(", ");
 				}
-				builder.append(column.getColumnName());
+				builder.append(column.getName());
 				builder.append(" ");
-				builder.append(column.getColumnType());
+				builder.append(column.getType());
 			}
 		}
 		return builder.toString();

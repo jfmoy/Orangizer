@@ -16,7 +16,7 @@ public enum EventsColumns implements DatabaseColumn {
 	ADDRESS("address", "TEXT", 1),
 	STARTING_DATE("starting_date", "INTEGER", 1),
 	ENDING_DATE("ending_date", "INTEGER", 1),
-	STATUS("status", "INTEGER", 1);
+	STATUS("status", "TEXT", 1);
 
 	private final String mName;
 	private final String mSqlType;
@@ -29,12 +29,12 @@ public enum EventsColumns implements DatabaseColumn {
 	}
 
 	@Override
-	public String getColumnName() {
+	public String getName() {
 		return mName;
 	}
 
 	@Override
-	public String getColumnType() {
+	public String getType() {
 		return mSqlType;
 	}
 
