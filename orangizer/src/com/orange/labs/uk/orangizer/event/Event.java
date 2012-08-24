@@ -27,7 +27,7 @@ public class Event {
 
 	private Event(String id, String name, String description, Date startDate, Date endingDate,
 			String address, RsvpStatus status) {
-		if (id == null || name == null) {
+		if (id == null) {
 			throw new IllegalArgumentException("Required parameters are missing");
 		}
 		mId = id;

@@ -8,13 +8,14 @@ import android.test.AndroidTestCase;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolver;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolverImpl;
 
-public class EventsDatabaseTesting extends AndroidTestCase {
+public class EventsDatabaseTest extends AndroidTestCase {
 
 	private static final String ID = "test_id";
 	private static final String SECOND_ID = "test_id2";
 	private static final String NAME = "test_name";
 	private static final String DESCRIPTION = "test_description";
 	private static final String ADDRESS = "test_address";
+	private static final String MODIFIED_ADDRESS = "modified_address";
 	private static final Date STARTING_DATE = new Date();
 	private static final Date ENDING_DATE = new Date();
 	private static final RsvpStatus STATUS = RsvpStatus.ATTENDING;
@@ -45,9 +46,7 @@ public class EventsDatabaseTesting extends AndroidTestCase {
 
 		assertTrue(mDb.insert(event));
 
-		mDb.deleteAll();
-
-		assertEquals(0, mDb.getAllEvents().size());
+		cleanUp();
 	}
 
 	public void testGetEvent() {
@@ -69,6 +68,27 @@ public class EventsDatabaseTesting extends AndroidTestCase {
 		assertEquals(retrieved.getEndingDate(), event.getEndingDate());
 		assertEquals(retrieved.getStatus(), event.getStatus());
 
+		cleanUp();
+	}
+	
+	public void testUpdateEvent() {
+		Event event = new Event.Builder().setId(ID).setName(NAME).setDescription(DESCRIPTION)
+				.setAddress(ADDRESS).setStartingDate(STARTING_DATE).setEndingDate(ENDING_DATE)
+				.setStatus(STATUS).build();
+
+		assertTrue(mDb.insert(event));
+		
+		Event modifiedEvent = new Event.Builder().setId(ID).setAddress(MODIFIED_ADDRESS).build();
+		assertTrue(mDb.update(modifiedEvent));
+		
+		event = mDb.getEvent(ID);
+		assertNotNull(event);
+		assertEquals(MODIFIED_ADDRESS, event.getAddress());
+		
+		cleanUp();
+	}
+
+	private void cleanUp() {
 		mDb.deleteAll();
 		assertEquals(0, mDb.getAllEvents().size());
 	}
@@ -87,9 +107,7 @@ public class EventsDatabaseTesting extends AndroidTestCase {
 
 		assertEquals(2, mDb.getAllEvents().size());
 
-		mDb.deleteAll();
-
-		assertEquals(0, mDb.getAllEvents().size());
+		cleanUp();
 	}
 
 	public void testDeleteEvent() {
@@ -120,8 +138,7 @@ public class EventsDatabaseTesting extends AndroidTestCase {
 		assertEquals(firstEvent.getId(), events.get(0).getId());
 		assertEquals(secondEvent.getId(), events.get(1).getId());
 		
-		mDb.deleteAll();
-		assertEquals(0, mDb.getAllEvents().size());
+		cleanUp();
 	}
 
 }

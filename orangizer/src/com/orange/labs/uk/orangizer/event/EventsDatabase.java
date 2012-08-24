@@ -67,10 +67,22 @@ public class EventsDatabase {
 		return event;
 	}
 
-	/** Insert the specified {@link Event} in the database. */
+	/** Insert the provided {@link Event} in the database. */
 	public boolean insert(Event event) {
+		Event existingEvent = getEvent(event.getId());
+		if (existingEvent != null) {
+			return update(event);
+		}
+		
 		SQLiteDatabase database = mDbHelper.getWritableDatabase();
 		return (database.insert(EVENTS_TABLE_NAME, null, getContentValues(event)) != -1);
+	}
+
+	/** Update the provided {@link Event} in the database */
+	public boolean update(Event event) {
+		SQLiteDatabase database = mDbHelper.getWritableDatabase();
+		String whereClause = getWhereClause(EventsColumns.ID, event.getId());
+		return (database.update(EVENTS_TABLE_NAME, getContentValues(event), whereClause, null) == 1);
 	}
 
 	/** Delete the specified {@link Event} from the databse */
