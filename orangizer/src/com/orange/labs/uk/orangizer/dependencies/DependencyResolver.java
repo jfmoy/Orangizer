@@ -3,6 +3,7 @@ package com.orange.labs.uk.orangizer.dependencies;
 import android.content.Context;
 
 import com.facebook.android.Facebook;
+import com.orange.labs.uk.orangizer.attendee.AttendeeFetcher;
 import com.orange.labs.uk.orangizer.event.EventsDatabase;
 import com.orange.labs.uk.orangizer.fetch.EventFetcher;
 import com.orange.labs.uk.orangizer.settings.SettingsManager;
@@ -23,5 +24,8 @@ public interface DependencyResolver {
 	
 	/** Return the Facebook Events Fetcher */
 	public EventFetcher getFacebookEventsFetcher();
+
+	/** Return the Facebook Attendees Fetcher */
+	public AttendeeFetcher getFacebookAttendeesFetcher();
 
 }

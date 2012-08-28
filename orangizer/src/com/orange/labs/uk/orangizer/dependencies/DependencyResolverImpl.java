@@ -3,6 +3,8 @@ package com.orange.labs.uk.orangizer.dependencies;
 import android.content.Context;
 
 import com.facebook.android.Facebook;
+import com.orange.labs.uk.orangizer.attendee.AttendeeFetcher;
+import com.orange.labs.uk.orangizer.attendee.FacebookAttendeesFetcher;
 import com.orange.labs.uk.orangizer.db.DatabaseHelper;
 import com.orange.labs.uk.orangizer.event.EventsDatabase;
 import com.orange.labs.uk.orangizer.event.FacebookEventFetcher;
@@ -71,11 +73,17 @@ public class DependencyResolverImpl implements DependencyResolver {
 		return new FacebookEventFetcher(getFacebook(), getEventsDatabase());
 	}
 	
+	@Override
+	public AttendeeFetcher getFacebookAttendeesFetcher() {
+		return new FacebookAttendeesFetcher(mFacebook);
+	}
+	
 	private DatabaseHelper getDatabaseHelper() {
 		if (mDbHelper == null) {
 			mDbHelper = new DatabaseHelper(getApplicationContext());
 		}
 		return mDbHelper;
 	}
+
 
 }

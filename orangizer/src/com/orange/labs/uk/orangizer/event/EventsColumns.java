@@ -10,7 +10,7 @@ import com.orange.labs.uk.orangizer.db.DatabaseColumn;
  * introduced at.
  */
 public enum EventsColumns implements DatabaseColumn {
-	ID("id", "TEXT PRIMARY KEY", 1),
+	ID("_id", "TEXT PRIMARY KEY", 1),
 	NAME("name", "TEXT", 1),
 	DESCRIPTION("description", "TEXT", 1),
 	ADDRESS("address", "TEXT", 1),

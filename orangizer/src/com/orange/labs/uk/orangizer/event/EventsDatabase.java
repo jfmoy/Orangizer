@@ -1,7 +1,6 @@
 package com.orange.labs.uk.orangizer.event;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -9,8 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.orange.labs.uk.orangizer.db.DatabaseHelper;
-import com.orange.labs.uk.orangizer.event.Event.Builder;
-import com.orange.labs.uk.orangizer.utils.CursorUtils;
+import com.orange.labs.uk.orangizer.utils.OrangizerUtils;
 
 public class EventsDatabase {
 	/** Table name */
@@ -27,21 +25,27 @@ public class EventsDatabase {
 	 * {@link List}.
 	 */
 	public List<Event> getAllEvents() {
-		SQLiteDatabase database = mDbHelper.getReadableDatabase();
-
 		List<Event> events = new ArrayList<Event>();
 		Cursor cursor = null;
 		try {
-			cursor = database.query(EVENTS_TABLE_NAME, null, null, null, null, null, null);
+			cursor = getEventsCursor();
 			while (cursor.moveToNext()) {
-				Event event = getEvent(cursor);
+				Event event = new Event.Builder().fromCursor(cursor).build();
 				events.add(event);
 			}
 		} finally {
-			CursorUtils.closeQuietly(cursor);
+			OrangizerUtils.closeQuietly(cursor);
 		}
 
 		return events;
+	}
+	
+	/**
+	 * Returns a Cursor pointing on all events stored in the database.
+	 */
+	public Cursor getEventsCursor() {
+		SQLiteDatabase database = mDbHelper.getReadableDatabase();
+		return database.query(EVENTS_TABLE_NAME, null, null, null, null, null, null);
 	}
 
 	/**
@@ -58,10 +62,10 @@ public class EventsDatabase {
 		try {
 			cursor = database.query(EVENTS_TABLE_NAME, null, query, null, null, null, null);
 			if (cursor.moveToFirst()) {
-				event = getEvent(cursor);
+				event = new Event.Builder().fromCursor(cursor).build();
 			}
 		} finally {
-			CursorUtils.closeQuietly(cursor);
+			OrangizerUtils.closeQuietly(cursor);
 		}
 
 		return event;
@@ -127,27 +131,6 @@ public class EventsDatabase {
 		}
 
 		return values;
-	}
-
-	/** Extract from the provided cursor an Event */
-	private Event getEvent(Cursor cursor) {
-		Builder builder = new Event.Builder();
-		builder.setId(CursorUtils.getString(cursor, EventsColumns.ID));
-		builder.setName(CursorUtils.getString(cursor, EventsColumns.NAME));
-		builder.setDescription(CursorUtils.getString(cursor, EventsColumns.DESCRIPTION));
-		builder.setAddress(CursorUtils.getString(cursor, EventsColumns.ADDRESS));
-
-		Date startingDate = new Date(CursorUtils.getLong(cursor, EventsColumns.STARTING_DATE));
-		builder.setStartingDate(startingDate);
-
-		Date endingDate = new Date(CursorUtils.getLong(cursor, EventsColumns.ENDING_DATE));
-		builder.setEndingDate(endingDate);
-
-		String statusCode = CursorUtils.getString(cursor, EventsColumns.STATUS);
-		RsvpStatus status = RsvpStatus.valueOf(statusCode);
-		builder.setStatus(status);
-
-		return builder.build();
 	}
 
 	/** Generates a WHERE clause using the provided column and value */

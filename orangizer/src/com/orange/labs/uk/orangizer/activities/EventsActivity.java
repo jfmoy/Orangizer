@@ -3,11 +3,17 @@ package com.orange.labs.uk.orangizer.activities;
 import java.util.List;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
@@ -17,11 +23,12 @@ import com.orange.labs.uk.orangizer.callback.Callback;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolver;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolverImpl;
 import com.orange.labs.uk.orangizer.event.Event;
-import com.orange.labs.uk.orangizer.fetch.EventFetcher;
+import com.orange.labs.uk.orangizer.event.EventsColumns;
+import com.orange.labs.uk.orangizer.event.EventsDatabase;
 import com.orange.labs.uk.orangizer.settings.SettingsManager;
 import com.orange.labs.uk.orangizer.utils.Logger;
 
-public class EventsActivity extends SherlockActivity {
+public class EventsActivity extends SherlockListActivity {
 
 	private static final Logger sLogger = Logger.getLogger(EventsActivity.class);
 
@@ -29,12 +36,13 @@ public class EventsActivity extends SherlockActivity {
 	private SettingsManager mSettingsManager;
 
 	private DependencyResolver mDependencyResolver;
-	
-	private Facebook mFacebook;
-	
-	private ListView mListView;
 
-	private List<Event> mEvents;
+	private Facebook mFacebook;
+
+	private EventsDatabase mEventsDb;
+
+	/** Cursor providing data for the events list */
+	private Cursor mCursor;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +52,16 @@ public class EventsActivity extends SherlockActivity {
 		mDependencyResolver = DependencyResolverImpl.getInstance();
 		mSettingsManager = mDependencyResolver.getSettingsManager();
 		mFacebook = mDependencyResolver.getFacebook();
-		
+		mEventsDb = mDependencyResolver.getEventsDatabase();
+		mCursor = mEventsDb.getEventsCursor();
+		startManagingCursor(mCursor);
+
+		ListAdapter adapter = new SimpleCursorAdapter(EventsActivity.this,
+				android.R.layout.two_line_list_item, mCursor, new String[] {
+						EventsColumns.NAME.getName(),
+						EventsColumns.STATUS.getName() }, new int[] {
+						android.R.id.text1, android.R.id.text2 });
+		setListAdapter(adapter);
 
 		String accessToken = mSettingsManager.getFacebookAccessToken();
 		long accessExpires = mSettingsManager.getFacebookAccessExpires();
@@ -60,7 +77,6 @@ public class EventsActivity extends SherlockActivity {
 		if (!mFacebook.isSessionValid()) {
 			mFacebook.authorize(this, new String[] { "user_events" }, new FacebookDialogListener());
 		}
-
 	}
 
 	@Override
@@ -104,18 +120,55 @@ public class EventsActivity extends SherlockActivity {
 		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.events_menu_refresh) {
+			fetchFacebookEvents();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		mCursor.moveToPosition(position);
+		Event clickedEvent = new Event.Builder().fromCursor(mCursor).build();
+		if (clickedEvent != null) {
+			// Start the view activity providing the Event id.
+			Intent viewIntent = new Intent(this, EventActivity.class);
+			viewIntent.putExtra(EventActivity.EVENT_FIELD, clickedEvent.getId());
+			startActivity(viewIntent);
+		} else {
+			super.onListItemClick(l, v, position, id);
+		}
+	}
+
 	/** Grab events from user profile */
 	private void fetchFacebookEvents() {
 		mDependencyResolver.getFacebookEventsFetcher().fetch(new Callback<List<Event>>() {
-			
+
 			@Override
 			public void onSuccess(List<Event> result) {
-				mEvents = result;
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						mCursor.requery();
+					}
+				});
 			}
-			
+
 			@Override
 			public void onFailure(Exception e) {
-				//TODO show error message to the user
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(EventsActivity.this,
+								getString(R.string.events_fetch_failed), Toast.LENGTH_SHORT).show();
+					}
+
+				});
 			}
 		});
 	}
@@ -144,7 +197,7 @@ public class EventsActivity extends SherlockActivity {
 
 		@Override
 		public void onCancel() {
-			
+
 		}
 	}
 

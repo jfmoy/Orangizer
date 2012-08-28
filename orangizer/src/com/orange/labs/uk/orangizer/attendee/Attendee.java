@@ -5,12 +5,13 @@ import org.json.JSONObject;
 
 import com.orange.labs.uk.orangizer.event.RsvpStatus;
 import com.orange.labs.uk.orangizer.utils.Logger;
+import com.orange.labs.uk.orangizer.utils.OrangizerUtils;
 
 /**
  * Attendee for an Event.
  */
 public class Attendee {
-	
+
 	private static final Logger sLogger = Logger.getLogger(Attendee.class);
 
 	private final String mName;
@@ -42,7 +43,7 @@ public class Attendee {
 	public boolean hasStatus() {
 		return (mStatus != null);
 	}
-	
+
 	public String getName() {
 		return mName;
 	}
@@ -65,6 +66,16 @@ public class Attendee {
 
 	public String getTwitterUsername() {
 		return mTwitterUsername;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder("Attendee: [\n");
+		builder.append(String.format("Name: %s, \n", mName));
+		builder.append(String.format("Facebook ID: %s, \n", mFacebookId));
+		builder.append(String.format("Status: %s, \n", mStatus));
+		builder.append("]");
+		return builder.toString();
 	}
 
 	public static class Builder {
@@ -112,15 +123,17 @@ public class Attendee {
 		}
 
 		public Attendee build() {
-			return new Attendee(mName, mEmail, mPhoneNumber, mStatus, mFacebookId,
-					mTwitterUsername);
+			return new Attendee(mName, mEmail, mPhoneNumber, mStatus, mFacebookId, mTwitterUsername);
 		}
 
 		public Builder fromJsonObject(JSONObject object) {
 			try {
 				mFacebookId = object.has("id") ? object.getString("id") : null;
 				mName = object.has("name") ? object.getString("name") : null;
-				// TODO: rsvp status
+				
+				// Convert status key to enum value
+				String statusKey = object.has("rsvp_status") ? object.getString("rsvp_status") : null;
+				mStatus = OrangizerUtils.valueToEnumValue(statusKey, RsvpStatus.class);
 			} catch (JSONException e) {
 				sLogger.w(String.format("This should never happen: %s", e));
 			}

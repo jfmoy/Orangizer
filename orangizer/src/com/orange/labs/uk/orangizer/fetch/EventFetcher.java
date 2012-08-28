@@ -13,6 +13,6 @@ public interface EventFetcher {
 	/**
 	 * Fetch events from the source.
 	 */
-	public void fetch(Callback<List<Event>> callback);
+	public abstract void fetch(Callback<List<Event>> callback);
 	
 }

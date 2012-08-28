@@ -1,6 +1,8 @@
 package com.orange.labs.uk.orangizer.event;
 
-public enum RsvpStatus {
+import com.orange.labs.uk.orangizer.utils.OrangizerEnum;
+
+public enum RsvpStatus implements OrangizerEnum {
 	ATTENDING("attending");
 	
 	//TODO: Add other status.
@@ -10,6 +12,7 @@ public enum RsvpStatus {
 		mCode = code;
 	}
 	
+	@Override
 	public String getCode() {
 		return mCode;
 	}

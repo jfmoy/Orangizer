@@ -1,29 +1,36 @@
 package com.orange.labs.uk.orangizer.event;
 
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.database.Cursor;
+
+import com.orange.labs.uk.orangizer.attendee.Attendee;
 import com.orange.labs.uk.orangizer.utils.Logger;
+import com.orange.labs.uk.orangizer.utils.OrangizerUtils;
 
 public class Event {
 
 	private static final Logger sLogger = Logger.getLogger(Event.class);
 
-	private final String mId;
+	private String mId;
 
-	private final String mName;
+	private String mName;
 
-	private final String mDescription;
+	private String mDescription;
 
-	private final Date mStartingDate;
+	private Date mStartingDate;
 
-	private final Date mEndingDate;
+	private Date mEndingDate;
 
-	private final String mAddress;
+	private String mAddress;
 
-	private final RsvpStatus mStatus;
+	private RsvpStatus mStatus;
+
+	private List<Attendee> mAttendees;
 
 	private Event(String id, String name, String description, Date startDate, Date endingDate,
 			String address, RsvpStatus status) {
@@ -78,29 +85,37 @@ public class Event {
 	public boolean hasDescription() {
 		return (mDescription != null);
 	}
-	
+
 	public boolean hasStartingDate() {
 		return (mStartingDate != null);
 	}
-	
+
 	public boolean hasEndingDate() {
 		return (mEndingDate != null);
 	}
-	
+
 	public boolean hasAddress() {
 		return (mAddress != null);
 	}
-	
+
 	public boolean hasStatus() {
 		return (mStatus != null);
 	}
 
+	/**
+	 * Set the list of attendees invited to the event.
+	 */
+	public void setAttendees(List<Attendee> attendees) {
+		mAttendees = attendees;
+	}
+
+	public List<Attendee> getAttendees() {
+		return mAttendees;
+	}
+
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("Event: ");
-		builder.append(String.format("ID: %s, ", mId));
-		builder.append(String.format("Name: %s", mName));
-		return builder.toString();
+		return mName;
 	}
 
 	public static class Builder {
@@ -123,10 +138,40 @@ public class Event {
 			try {
 				mId = object.has("id") ? object.getString("id") : null;
 				mName = object.has("name") ? object.getString("name") : null;
+				mAddress = object.has("location") ? object.getString("location") : null;
+				
+				
+				// Set status.
+				String statusCode = object.has("rsvp_status") ? object.getString("rsvp_status")
+						: null;
+				if (statusCode != null) {
+					mStatus = OrangizerUtils.valueToEnumValue(statusCode, RsvpStatus.class);
+				}
+
 				// TODO: format start time and end time
 			} catch (JSONException e) {
 				sLogger.w(String.format("This should never happen: %s", e));
 			}
+
+			return this;
+		}
+
+		public Builder fromCursor(Cursor cursor) {
+			setId(OrangizerUtils.getString(cursor, EventsColumns.ID));
+			setName(OrangizerUtils.getString(cursor, EventsColumns.NAME));
+			setDescription(OrangizerUtils.getString(cursor, EventsColumns.DESCRIPTION));
+			setAddress(OrangizerUtils.getString(cursor, EventsColumns.ADDRESS));
+
+			Date startingDate = new Date(
+					OrangizerUtils.getLong(cursor, EventsColumns.STARTING_DATE));
+			setStartingDate(startingDate);
+
+			Date endingDate = new Date(OrangizerUtils.getLong(cursor, EventsColumns.ENDING_DATE));
+			setEndingDate(endingDate);
+
+			String statusCode = OrangizerUtils.getString(cursor, EventsColumns.STATUS);
+			RsvpStatus status = OrangizerUtils.valueToEnumValue(statusCode, RsvpStatus.class);
+			setStatus(status);
 
 			return this;
 		}
