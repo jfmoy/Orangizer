@@ -3,17 +3,17 @@
     <string name="app_name">Orangizer</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_events">My Events</string>
-    
     <string name="events_no_events">No Events, Press + above to add one.</string>
     <string name="events_fetch_failed">Impossible to fetch Events, check connectivity.</string>
     <string name="events_menu_refresh">Refresh</string>
     <string name="events_menu_add">Add</string>
-    
     <string name="event_activity_name">Event</string>
     <string name="event_attending">%d guests</string>
     <string name="event_attending_error">Failed to fetch attendees for that event.</string>
     <string name="event_remind">Remind the guests</string>
     <string name="event_where">WHERE</string>
     <string name="event_who">WHO</string>
+    <string name="event_remind_ok">%d attendees have succesfully been reminded by SMS!</string>
+    <string name="event_remind_ko">Attendees could not be contact, do you have their phone numbers in your address book?</string>
 
 </resources>

@@ -9,9 +9,11 @@ import android.database.DatabaseUtils;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
+import android.telephony.SmsManager;
 
 import com.orange.labs.uk.orangizer.attendee.Attendee;
 import com.orange.labs.uk.orangizer.callback.Callback;
+import com.orange.labs.uk.orangizer.event.Event;
 import com.orange.labs.uk.orangizer.utils.Logger;
 import com.orange.labs.uk.orangizer.utils.OrangizerUtils;
 
@@ -24,18 +26,24 @@ public class GuestsReminder {
 	private static final Logger sLogger = Logger.getLogger(GuestsReminder.class);
 
 	private Context mContext;
+	
+	private SmsManager mSmsManager;
 
 	/**
 	 * Context is needed to access the phone's address book.
 	 */
 	public GuestsReminder(Context context) {
 		mContext = context;
+		mSmsManager = SmsManager.getDefault();
 	}
 
-	public void remind(List<Attendee> attendees, Callback<Void> callback) {
+	public void remind(Event event, Callback<Integer> callback) {
+		// Get all attendees for that event.
+		List<Attendee> attendees = event.getAttendees();
+		
+		// Retrieve phone numbers of attendees.
 		ContentResolver cr = mContext.getContentResolver();
 		Cursor contacts = null;
-
 		try {
 			contacts = cr.query(ContactsContract.Contacts.CONTENT_URI, null, withPhone(attendees),
 					null, null);
@@ -52,6 +60,9 @@ public class GuestsReminder {
 					while (phones.moveToNext()) {
 						String number = phones.getString(phones.getColumnIndex(Phone.NUMBER));
 						sLogger.d("Found phone number: " + number);
+						mSmsManager.sendTextMessage(number, null, "Awesome party!", null, null);
+						callback.onSuccess(phones.getCount());
+						return;
 					}
 				} finally {
 					OrangizerUtils.closeQuietly(phones);
@@ -60,6 +71,8 @@ public class GuestsReminder {
 		} finally {
 			OrangizerUtils.closeQuietly(contacts);
 		}
+		
+		callback.onFailure(null);
 	}
 
 	private String withPhone(List<Attendee> attendees) {
