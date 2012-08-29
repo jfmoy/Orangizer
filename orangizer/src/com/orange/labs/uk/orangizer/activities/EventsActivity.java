@@ -57,10 +57,9 @@ public class EventsActivity extends SherlockListActivity {
 		startManagingCursor(mCursor);
 
 		ListAdapter adapter = new SimpleCursorAdapter(EventsActivity.this,
-				android.R.layout.two_line_list_item, mCursor, new String[] {
-						EventsColumns.NAME.getName(),
-						EventsColumns.STATUS.getName() }, new int[] {
-						android.R.id.text1, android.R.id.text2 });
+				R.layout.event_list_item, mCursor, new String[] { EventsColumns.NAME.getName(),
+						EventsColumns.ORGANIZER.getName() }, new int[] {
+						R.id.event_list_item_title, R.id.event_list_item_subtitle });
 		setListAdapter(adapter);
 
 		String accessToken = mSettingsManager.getFacebookAccessToken();
@@ -75,7 +74,8 @@ public class EventsActivity extends SherlockListActivity {
 		}
 
 		if (!mFacebook.isSessionValid()) {
-			mFacebook.authorize(this, new String[] { "user_events" }, new FacebookDialogListener());
+			mFacebook.authorize(this, new String[] { "user_events", "create_event" },
+					new FacebookDialogListener());
 		}
 	}
 
@@ -125,6 +125,9 @@ public class EventsActivity extends SherlockListActivity {
 		if (item.getItemId() == R.id.events_menu_refresh) {
 			fetchFacebookEvents();
 			return true;
+		} else if (item.getItemId() == R.id.events_menu_add) {
+			Intent createIntent = new Intent(this, CreateEventActivity.class);
+			startActivity(createIntent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -145,7 +148,7 @@ public class EventsActivity extends SherlockListActivity {
 
 	/** Grab events from user profile */
 	private void fetchFacebookEvents() {
-		mDependencyResolver.getFacebookEventsFetcher().fetch(new Callback<List<Event>>() {
+		mDependencyResolver.getEventsFetcher().fetch(new Callback<List<Event>>() {
 
 			@Override
 			public void onSuccess(List<Event> result) {

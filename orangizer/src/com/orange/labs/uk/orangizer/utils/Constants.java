@@ -8,4 +8,7 @@ public final class Constants {
 	/** Debug Logging */
 	public static final boolean DEBUG_LOG = true;
 	
+	/** Facebook Default Privacy */
+	public static final String FACEBOOK_DEFAULT_PRIVACY = "FRIENDS";
+	
 }

@@ -1,7 +1,8 @@
 package com.orange.labs.uk.orangizer.activities;
 
+import java.text.DateFormat;
+
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.orange.labs.uk.orangizer.event.Event;
 import com.orange.labs.uk.orangizer.event.EventsDatabase;
 import com.orange.labs.uk.orangizer.sms.GuestsReminder;
 import com.orange.labs.uk.orangizer.utils.Logger;
+import com.orange.labs.uk.orangizer.utils.OrangizerUtils;
 
 public class EventActivity extends SherlockActivity {
 
@@ -58,7 +60,7 @@ public class EventActivity extends SherlockActivity {
 		mEvent = (eventId != null) ? mEventsDb.getEvent(eventId) : null;
 		if (mEvent != null) {
 			// Fetch attendees for that event.
-			mDependencyResolver.getFacebookAttendeesFetcher().fetch(mEvent, new Callback<Event>() {
+			mDependencyResolver.getAttendeesFetcher().fetch(mEvent, new Callback<Event>() {
 
 				@Override
 				public void onSuccess(Event result) {
@@ -94,14 +96,16 @@ public class EventActivity extends SherlockActivity {
 			TextView addressTv = (TextView) findViewById(R.id.event_address_tv);
 			addressTv.setText(mEvent.getAddress());
 			
+			String startTime = DateFormat.getDateTimeInstance().format(mEvent.getStartDate());
+			TextView starttimeTv = (TextView) findViewById(R.id.event_starttime_tv);
+			starttimeTv.setText(startTime);
+			
 			ImageButton mapButton = (ImageButton) findViewById(R.id.event_map_b);
 			mapButton.setOnClickListener(new View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(
-							android.content.Intent.ACTION_VIEW,
-							Uri.parse("http://maps.google.com/maps?q=" + mEvent.getAddress()));
+					Intent intent = OrangizerUtils.getMapIntent(mEvent.getAddress());
 					startActivity(intent);
 				}
 			});

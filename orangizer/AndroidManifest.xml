@@ -30,6 +30,11 @@
             android:name=".activities.EventActivity"
             android:label="@string/event_activity_name">
         </activity>
+        
+        <activity
+            android:name=".activities.CreateEventActivity"
+            android:label="@string/create_new_event">
+        </activity>
     </application>
 
 </manifest>

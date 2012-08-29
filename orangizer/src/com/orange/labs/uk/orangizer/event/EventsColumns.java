@@ -15,8 +15,8 @@ public enum EventsColumns implements DatabaseColumn {
 	ORGANIZER("organizer", "TEXT", 1),
 	DESCRIPTION("description", "TEXT", 1),
 	ADDRESS("address", "TEXT", 1),
-	STARTING_DATE("starting_date", "INTEGER", 1),
-	ENDING_DATE("ending_date", "INTEGER", 1),
+	START_DATE("starting_date", "INTEGER", 1),
+	END_DATE("ending_date", "INTEGER", 1),
 	STATUS("status", "TEXT", 1);
 
 	private final String mName;

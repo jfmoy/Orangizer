@@ -76,18 +76,21 @@ public class FacebookEventFetcher implements EventFetcher {
 				return;
 			}
 
-			AtomicInteger remaining = new AtomicInteger(events.size());
-			AtomicBoolean failureReported = new AtomicBoolean(false);
-			AtomicReference<List<Event>> eventsRef = new AtomicReference<List<Event>>(
-					new ArrayList<Event>());
+			if (events.size() > 0) {
+				AtomicInteger remaining = new AtomicInteger(events.size());
+				AtomicBoolean failureReported = new AtomicBoolean(false);
+				AtomicReference<List<Event>> eventsRef = new AtomicReference<List<Event>>(
+						new ArrayList<Event>());
 
-			// insert events in the db.
-			for (Event event : events) {
-				AsyncFacebookRunner runner = new AsyncFacebookRunner(mFacebook);
-				runner.request(event.getId(), new DetailedEventRequestListener(remaining,
-						failureReported, eventsRef, mCallback, event));
+				// insert events in the db.
+				for (Event event : events) {
+					AsyncFacebookRunner runner = new AsyncFacebookRunner(mFacebook);
+					runner.request(event.getId(), new DetailedEventRequestListener(remaining,
+							failureReported, eventsRef, mCallback, event));
+				}
+			} else {
+				mCallback.onSuccess(events);
 			}
-
 		}
 
 		@Override

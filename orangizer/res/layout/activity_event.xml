@@ -59,12 +59,37 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/event_what_separator"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+        
+        <TextView
+            android:id="@+id/event_when_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_description_tv"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/event_when"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/orange" />
+
+        <View
+            android:id="@+id/event_when_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/event_when_tv"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:background="@color/orange" />
+
+        <TextView
+            android:id="@+id/event_starttime_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_when_separator"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
         <TextView
             android:id="@+id/event_where_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/event_description_tv"
+            android:layout_below="@id/event_starttime_tv"
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/event_where"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"

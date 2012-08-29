@@ -3,7 +3,9 @@ package com.orange.labs.uk.orangizer.utils;
 import java.io.Closeable;
 import java.io.IOException;
 
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 
 import com.orange.labs.uk.orangizer.db.DatabaseColumn;
 
@@ -58,4 +60,8 @@ public class OrangizerUtils {
 		return null;
 	}
 
+	public static Intent getMapIntent(String address) {
+		return new Intent(android.content.Intent.ACTION_VIEW,
+				Uri.parse("http://maps.google.com/maps?q=" + address));
+	}
 }

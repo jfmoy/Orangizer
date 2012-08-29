@@ -64,7 +64,7 @@ public class EventsDatabaseTest extends AndroidTestCase {
 		assertEquals(retrieved.getName(), event.getName());
 		assertEquals(retrieved.getAddress(), event.getAddress());
 		assertEquals(retrieved.getDescription(), event.getDescription());
-		assertEquals(retrieved.getStartingDate(), event.getStartingDate());
+		assertEquals(retrieved.getStartDate(), event.getStartDate());
 		assertEquals(retrieved.getEndingDate(), event.getEndingDate());
 		assertEquals(retrieved.getStatus(), event.getStatus());
 

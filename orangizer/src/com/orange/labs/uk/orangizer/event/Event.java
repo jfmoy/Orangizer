@@ -1,5 +1,8 @@
 package com.orange.labs.uk.orangizer.event;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -7,8 +10,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.database.Cursor;
+import android.os.Bundle;
 
 import com.orange.labs.uk.orangizer.attendee.Attendee;
+import com.orange.labs.uk.orangizer.utils.Constants;
 import com.orange.labs.uk.orangizer.utils.Logger;
 import com.orange.labs.uk.orangizer.utils.OrangizerUtils;
 
@@ -19,14 +24,14 @@ public class Event {
 	private String mId;
 
 	private String mName;
-	
+
 	private String mOrganizer;
 
 	private String mDescription;
 
-	private Date mStartingDate;
+	private Date mStartDate;
 
-	private Date mEndingDate;
+	private Date mEndDate;
 
 	private String mAddress;
 
@@ -34,17 +39,15 @@ public class Event {
 
 	private List<Attendee> mAttendees;
 
-	private Event(String id, String name, String organizer, String description, Date startDate, Date endingDate,
-			String address, RsvpStatus status) {
-		if (id == null) {
-			throw new IllegalArgumentException("Required parameters are missing");
-		}
+
+	private Event(String id, String name, String organizer, String description, Date startDate,
+			Date endingDate, String address, RsvpStatus status) {
 		mId = id;
 		mName = name;
 		mOrganizer = organizer;
 		mDescription = description;
-		mStartingDate = startDate;
-		mEndingDate = endingDate;
+		mStartDate = startDate;
+		mEndDate = endingDate;
 		mAddress = address;
 		mStatus = status;
 	}
@@ -56,7 +59,7 @@ public class Event {
 	public String getName() {
 		return mName;
 	}
-	
+
 	public String getOrganizer() {
 		return mOrganizer;
 	}
@@ -65,12 +68,12 @@ public class Event {
 		return mDescription;
 	}
 
-	public Date getStartingDate() {
-		return mStartingDate;
+	public Date getStartDate() {
+		return mStartDate;
 	}
 
 	public Date getEndingDate() {
-		return mEndingDate;
+		return mEndDate;
 	}
 
 	public String getAddress() {
@@ -82,35 +85,42 @@ public class Event {
 	}
 
 	public boolean hasId() {
-		return (mId != null);
+		return (mId != null && mId.length() > 0);
 	}
 
 	public boolean hasName() {
-		return (mName != null);
+		return (mName != null && mName.length() > 0);
 	}
-	
+
 	public boolean hasOrganizer() {
-		return (mOrganizer != null);
+		return (mOrganizer != null && mOrganizer.length() > 0);
 	}
 
 	public boolean hasDescription() {
-		return (mDescription != null);
+		return (mDescription != null && mDescription.length() > 0);
 	}
 
 	public boolean hasStartingDate() {
-		return (mStartingDate != null);
+		return (mStartDate != null);
 	}
 
 	public boolean hasEndingDate() {
-		return (mEndingDate != null);
+		return (mEndDate != null);
 	}
 
 	public boolean hasAddress() {
-		return (mAddress != null);
+		return (mAddress != null && mAddress.length() > 0);
 	}
 
 	public boolean hasStatus() {
 		return (mStatus != null);
+	}
+
+	/**
+	 * Set the Event ID
+	 */
+	public void setId(String id) {
+		mId = id;
 	}
 
 	/**
@@ -126,7 +136,58 @@ public class Event {
 
 	@Override
 	public String toString() {
-		return mName;
+		StringBuilder builder = new StringBuilder("Event : [\n");
+		if (hasName()) {
+			builder.append(String.format("Name: %s, \n", getName()));
+		}
+		if (hasDescription()) {
+			builder.append(String.format("Description: %s, \n", getDescription()));
+		}
+		if (hasAddress()) {
+			builder.append(String.format("Address: %s, \n", getAddress()));
+		}
+		if (hasStartingDate()) {
+			builder.append(String.format("Starting Date: %s, \n", getStartDate().toString()));
+		}
+		if (hasEndingDate()) {
+			builder.append(String.format("Ending Date: %s, \n", getEndingDate().toString()));
+		}
+		if (hasId()) {
+			builder.append(String.format("ID: %s, \n", getId()));
+		}
+		if (hasOrganizer()) {
+			builder.append(String.format("Organizer: %s, \n", getOrganizer()));
+		}
+		if (hasStatus()) {
+			builder.append(String.format("Status: %s, \n", getStatus()));
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
+	public Bundle toFacebookBundle() {
+		Bundle bundle = new Bundle();
+
+		if (hasName()) {
+			bundle.putString("name", getName());
+		}
+		if (hasAddress()) {
+			bundle.putString("location", getAddress());
+		}
+		if (hasStartingDate()) {
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+			bundle.putString("start_time", df.format(getStartDate()));
+		}
+		if (hasEndingDate()) {
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+			bundle.putString("end_time", df.format(getEndingDate()));
+		}
+		if (hasDescription()) {
+			bundle.putString("description", getDescription());
+		}
+		bundle.putString("privacy_type", Constants.FACEBOOK_DEFAULT_PRIVACY);
+
+		return bundle;
 	}
 
 	public static class Builder {
@@ -134,14 +195,14 @@ public class Event {
 		private String mId;
 
 		private String mName;
-		
+
 		private String mOrganizer;
 
 		private String mDescription;
 
-		private Date mStartingDate;
+		private Date mStartDate;
 
-		private Date mEndingDate;
+		private Date mEndDate;
 
 		private String mAddress;
 
@@ -153,14 +214,37 @@ public class Event {
 				mName = object.has("name") ? object.getString("name") : null;
 				mAddress = object.has("location") ? object.getString("location") : null;
 				mDescription = object.has("description") ? object.getString("description") : null;
-				
+
 				// Set status.
 				String statusCode = object.has("rsvp_status") ? object.getString("rsvp_status")
 						: null;
 				if (statusCode != null) {
 					mStatus = OrangizerUtils.valueToEnumValue(statusCode, RsvpStatus.class);
 				}
-				
+
+				// Start time
+				String date = object.has("start_time") ? object.getString("start_time") : null;
+				if (date != null) {
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+					try {
+						mStartDate = format.parse(date);
+					} catch (ParseException e) {
+						sLogger.w("Could not parse starting date: " + date);
+					}
+				}
+
+				// End Time
+				date = object.has("end_time") ? object.getString("end_time") : null;
+				if (date != null) {
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+					try {
+						mEndDate = format.parse(date);
+					} catch (ParseException e) {
+						sLogger.w("Could not parse starting date: " + date);
+					}
+				}
+
+				// Owner
 				if (object.has("owner")) {
 					JSONObject owner = object.getJSONObject("owner");
 					mOrganizer = owner.has("name") ? owner.getString("name") : null;
@@ -181,17 +265,16 @@ public class Event {
 			setDescription(OrangizerUtils.getString(cursor, EventsColumns.DESCRIPTION));
 			setAddress(OrangizerUtils.getString(cursor, EventsColumns.ADDRESS));
 
-			Date startingDate = new Date(
-					OrangizerUtils.getLong(cursor, EventsColumns.STARTING_DATE));
+			Date startingDate = new Date(OrangizerUtils.getLong(cursor, EventsColumns.START_DATE));
 			setStartingDate(startingDate);
 
-			Date endingDate = new Date(OrangizerUtils.getLong(cursor, EventsColumns.ENDING_DATE));
+			Date endingDate = new Date(OrangizerUtils.getLong(cursor, EventsColumns.END_DATE));
 			setEndingDate(endingDate);
 
 			String statusCode = OrangizerUtils.getString(cursor, EventsColumns.STATUS);
 			RsvpStatus status = OrangizerUtils.valueToEnumValue(statusCode, RsvpStatus.class);
 			setStatus(status);
-			
+
 			return this;
 		}
 
@@ -209,19 +292,19 @@ public class Event {
 			mOrganizer = organizer;
 			return this;
 		}
-		
+
 		public Builder setDescription(String description) {
 			mDescription = description;
 			return this;
 		}
 
 		public Builder setStartingDate(Date startingDate) {
-			mStartingDate = startingDate;
+			mStartDate = startingDate;
 			return this;
 		}
 
 		public Builder setEndingDate(Date endingDate) {
-			mEndingDate = endingDate;
+			mEndDate = endingDate;
 			return this;
 		}
 
@@ -236,7 +319,7 @@ public class Event {
 		}
 
 		public Event build() {
-			return new Event(mId, mName, mOrganizer, mDescription, mStartingDate, mEndingDate, mAddress,
+			return new Event(mId, mName, mOrganizer, mDescription, mStartDate, mEndDate, mAddress,
 					mStatus);
 		}
 	}

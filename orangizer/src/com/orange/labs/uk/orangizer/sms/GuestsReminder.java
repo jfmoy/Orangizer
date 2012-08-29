@@ -1,5 +1,6 @@
 package com.orange.labs.uk.orangizer.sms;
 
+import java.text.DateFormat;
 import java.util.List;
 
 import android.content.ContentResolver;
@@ -26,7 +27,7 @@ public class GuestsReminder {
 	private static final Logger sLogger = Logger.getLogger(GuestsReminder.class);
 
 	private Context mContext;
-	
+
 	private SmsManager mSmsManager;
 
 	/**
@@ -40,7 +41,12 @@ public class GuestsReminder {
 	public void remind(Event event, Callback<Integer> callback) {
 		// Get all attendees for that event.
 		List<Attendee> attendees = event.getAttendees();
-		
+
+		int contactsContacted = 0;
+		String smsContent = String.format(
+				"Hey! You are invited to %s on %s, come, it will be aweomse!", event.getName(),
+				DateFormat.getDateTimeInstance().format(event.getStartDate()));
+
 		// Retrieve phone numbers of attendees.
 		ContentResolver cr = mContext.getContentResolver();
 		Cursor contacts = null;
@@ -50,19 +56,22 @@ public class GuestsReminder {
 
 			sLogger.d("Cursor size : " + contacts.getCount());
 			while (contacts.moveToNext()) {
+				sLogger.d("Contact Name: "
+						+ contacts.getString(contacts.getColumnIndex(Contacts.DISPLAY_NAME)));
+
 				String id = contacts.getString(contacts
 						.getColumnIndex(ContactsContract.Contacts._ID));
-
 				Cursor phones = null;
 				try {
 					phones = cr.query(Phone.CONTENT_URI, null, Phone.CONTACT_ID + " = " + id, null,
 							null);
-					while (phones.moveToNext()) {
+					if (phones.moveToFirst()) {
+						contactsContacted++;
+						
+						// Texting the number.
 						String number = phones.getString(phones.getColumnIndex(Phone.NUMBER));
 						sLogger.d("Found phone number: " + number);
-						mSmsManager.sendTextMessage(number, null, "Awesome party!", null, null);
-						callback.onSuccess(phones.getCount());
-						return;
+						mSmsManager.sendTextMessage(number, null, smsContent, null, null);
 					}
 				} finally {
 					OrangizerUtils.closeQuietly(phones);
@@ -71,8 +80,12 @@ public class GuestsReminder {
 		} finally {
 			OrangizerUtils.closeQuietly(contacts);
 		}
-		
-		callback.onFailure(null);
+
+		if (contactsContacted > 0) {
+			callback.onSuccess(contactsContacted);
+		} else {
+			callback.onFailure(null);
+		}
 	}
 
 	private String withPhone(List<Attendee> attendees) {

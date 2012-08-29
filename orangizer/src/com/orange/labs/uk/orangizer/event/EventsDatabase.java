@@ -124,10 +124,10 @@ public class EventsDatabase {
 			values.put(EventsColumns.ADDRESS.getName(), event.getAddress());
 		}
 		if (event.hasStartingDate()) {
-			values.put(EventsColumns.STARTING_DATE.getName(), event.getStartingDate().getTime());
+			values.put(EventsColumns.START_DATE.getName(), event.getStartDate().getTime());
 		}
 		if (event.hasEndingDate()) {
-			values.put(EventsColumns.ENDING_DATE.getName(), event.getEndingDate().getTime());
+			values.put(EventsColumns.END_DATE.getName(), event.getEndingDate().getTime());
 		}
 		if (event.hasStatus()) {
 			values.put(EventsColumns.STATUS.getName(), event.getStatus().getCode());
