@@ -18,20 +18,20 @@ import com.orange.labs.uk.orangizer.callback.Callback;
 import com.orange.labs.uk.orangizer.event.Event;
 import com.orange.labs.uk.orangizer.utils.Logger;
 
-public class FacebookAttendeesFetcher implements AttendeeFetcher {
+public class FacebookInvitedFetcher implements InvitedFetcher {
 
-	private static final Logger sLogger = Logger.getLogger(FacebookAttendeesFetcher.class);
+	private static final Logger sLogger = Logger.getLogger(FacebookInvitedFetcher.class);
 
 	private final Facebook mFacebook;
 
-	public FacebookAttendeesFetcher(Facebook facebook) {
+	public FacebookInvitedFetcher(Facebook facebook) {
 		mFacebook = facebook;
 	}
 
 	@Override
 	public void fetch(final Event event, final Callback<Event> callback) {
 		AsyncFacebookRunner runner = new AsyncFacebookRunner(mFacebook);
-		runner.request(String.format("%s/attending", event.getId()), new AttendeesRequestListener(
+		runner.request(String.format("%s/invited", event.getId()), new AttendeesRequestListener(
 				event, callback));
 	}
 

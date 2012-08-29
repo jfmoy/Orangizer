@@ -1,5 +1,12 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="OrangizerTheme" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow" />
+    <style name="OrangizerTheme" parent="Theme.Sherlock.Light.DarkActionBar.ForceOverflow">
+		<item name="android:actionBarStyle">@style/Orange.OrangeActionBar</item>
+    </style>
+    
+    <!-- style for the action bar backgrounds -->
+    <style name="Orange.OrangeActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/orange</item>
+    </style>
 
 </resources>

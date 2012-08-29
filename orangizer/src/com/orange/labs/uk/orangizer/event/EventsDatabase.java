@@ -114,6 +114,9 @@ public class EventsDatabase {
 		if (event.hasName()) {
 			values.put(EventsColumns.NAME.getName(), event.getName());
 		}
+		if (event.hasOrganizer()) {
+			values.put(EventsColumns.ORGANIZER.getName(), event.getOrganizer());
+		}
 		if (event.hasDescription()) {
 			values.put(EventsColumns.DESCRIPTION.getName(), event.getDescription());
 		}
@@ -127,7 +130,7 @@ public class EventsDatabase {
 			values.put(EventsColumns.ENDING_DATE.getName(), event.getEndingDate().getTime());
 		}
 		if (event.hasStatus()) {
-			values.put(EventsColumns.STATUS.getName(), event.getStatus().name());
+			values.put(EventsColumns.STATUS.getName(), event.getStatus().getCode());
 		}
 
 		return values;

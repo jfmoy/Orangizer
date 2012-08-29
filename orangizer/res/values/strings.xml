@@ -11,8 +11,11 @@
     <string name="event_attending">%d guests</string>
     <string name="event_attending_error">Failed to fetch attendees for that event.</string>
     <string name="event_remind">Remind the guests</string>
+    <string name="event_whosinviting">WHO\'S INVITING</string>
     <string name="event_where">WHERE</string>
-    <string name="event_who">WHO</string>
+    <string name="event_whoscoming">WHO\'S COMING</string>
+    <string name="event_what">WHAT</string>
+    <string name="event_map">Show on map</string>
     <string name="event_remind_ok">%d attendees have succesfully been reminded by SMS!</string>
     <string name="event_remind_ko">Attendees could not be contact, do you have their phone numbers in your address book?</string>
 

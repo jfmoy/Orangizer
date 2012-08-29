@@ -1,6 +1,7 @@
 package com.orange.labs.uk.orangizer.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,8 +85,26 @@ public class EventActivity extends SherlockActivity {
 			sLogger.i(String.format("Showing Event: %s", mEvent.toString()));
 			setTitle(mEvent.getName());
 
+			TextView organizerTv = (TextView) findViewById(R.id.event_organizer_tv);
+			organizerTv.setText(mEvent.getOrganizer());
+
+			TextView descTv = (TextView) findViewById(R.id.event_description_tv);
+			descTv.setText(mEvent.getDescription());
+
 			TextView addressTv = (TextView) findViewById(R.id.event_address_tv);
 			addressTv.setText(mEvent.getAddress());
+			
+			ImageButton mapButton = (ImageButton) findViewById(R.id.event_map_b);
+			mapButton.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(
+							android.content.Intent.ACTION_VIEW,
+							Uri.parse("http://maps.google.com/maps?q=" + mEvent.getAddress()));
+					startActivity(intent);
+				}
+			});
 
 			ImageButton remindButton = (ImageButton) findViewById(R.id.event_remind_b);
 			remindButton.setOnClickListener(new ReminderButtonClickListener());

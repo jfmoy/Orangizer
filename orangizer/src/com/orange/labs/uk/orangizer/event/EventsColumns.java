@@ -12,6 +12,7 @@ import com.orange.labs.uk.orangizer.db.DatabaseColumn;
 public enum EventsColumns implements DatabaseColumn {
 	ID("_id", "TEXT PRIMARY KEY", 1),
 	NAME("name", "TEXT", 1),
+	ORGANIZER("organizer", "TEXT", 1),
 	DESCRIPTION("description", "TEXT", 1),
 	ADDRESS("address", "TEXT", 1),
 	STARTING_DATE("starting_date", "INTEGER", 1),

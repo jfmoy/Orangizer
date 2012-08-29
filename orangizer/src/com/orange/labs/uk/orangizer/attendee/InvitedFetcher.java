@@ -9,7 +9,7 @@ import com.orange.labs.uk.orangizer.event.Event;
  * Interface defining the method for fetching attendees for a list of events. Once the attendees
  * have been fetched, a callback is executed provided the list back including the attendees.
  */
-public interface AttendeeFetcher {
+public interface InvitedFetcher {
 
 	public abstract void fetch(List<Event> events, Callback<List<Event>> callback);
 

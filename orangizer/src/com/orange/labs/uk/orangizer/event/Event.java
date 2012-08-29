@@ -19,6 +19,8 @@ public class Event {
 	private String mId;
 
 	private String mName;
+	
+	private String mOrganizer;
 
 	private String mDescription;
 
@@ -32,13 +34,14 @@ public class Event {
 
 	private List<Attendee> mAttendees;
 
-	private Event(String id, String name, String description, Date startDate, Date endingDate,
+	private Event(String id, String name, String organizer, String description, Date startDate, Date endingDate,
 			String address, RsvpStatus status) {
 		if (id == null) {
 			throw new IllegalArgumentException("Required parameters are missing");
 		}
 		mId = id;
 		mName = name;
+		mOrganizer = organizer;
 		mDescription = description;
 		mStartingDate = startDate;
 		mEndingDate = endingDate;
@@ -52,6 +55,10 @@ public class Event {
 
 	public String getName() {
 		return mName;
+	}
+	
+	public String getOrganizer() {
+		return mOrganizer;
 	}
 
 	public String getDescription() {
@@ -80,6 +87,10 @@ public class Event {
 
 	public boolean hasName() {
 		return (mName != null);
+	}
+	
+	public boolean hasOrganizer() {
+		return (mOrganizer != null);
 	}
 
 	public boolean hasDescription() {
@@ -123,6 +134,8 @@ public class Event {
 		private String mId;
 
 		private String mName;
+		
+		private String mOrganizer;
 
 		private String mDescription;
 
@@ -139,13 +152,18 @@ public class Event {
 				mId = object.has("id") ? object.getString("id") : null;
 				mName = object.has("name") ? object.getString("name") : null;
 				mAddress = object.has("location") ? object.getString("location") : null;
-				
+				mDescription = object.has("description") ? object.getString("description") : null;
 				
 				// Set status.
 				String statusCode = object.has("rsvp_status") ? object.getString("rsvp_status")
 						: null;
 				if (statusCode != null) {
 					mStatus = OrangizerUtils.valueToEnumValue(statusCode, RsvpStatus.class);
+				}
+				
+				if (object.has("owner")) {
+					JSONObject owner = object.getJSONObject("owner");
+					mOrganizer = owner.has("name") ? owner.getString("name") : null;
 				}
 
 				// TODO: format start time and end time
@@ -159,6 +177,7 @@ public class Event {
 		public Builder fromCursor(Cursor cursor) {
 			setId(OrangizerUtils.getString(cursor, EventsColumns.ID));
 			setName(OrangizerUtils.getString(cursor, EventsColumns.NAME));
+			setOrganizer(OrangizerUtils.getString(cursor, EventsColumns.ORGANIZER));
 			setDescription(OrangizerUtils.getString(cursor, EventsColumns.DESCRIPTION));
 			setAddress(OrangizerUtils.getString(cursor, EventsColumns.ADDRESS));
 
@@ -172,7 +191,7 @@ public class Event {
 			String statusCode = OrangizerUtils.getString(cursor, EventsColumns.STATUS);
 			RsvpStatus status = OrangizerUtils.valueToEnumValue(statusCode, RsvpStatus.class);
 			setStatus(status);
-
+			
 			return this;
 		}
 
@@ -186,6 +205,11 @@ public class Event {
 			return this;
 		}
 
+		public Builder setOrganizer(String organizer) {
+			mOrganizer = organizer;
+			return this;
+		}
+		
 		public Builder setDescription(String description) {
 			mDescription = description;
 			return this;
@@ -212,7 +236,7 @@ public class Event {
 		}
 
 		public Event build() {
-			return new Event(mId, mName, mDescription, mStartingDate, mEndingDate, mAddress,
+			return new Event(mId, mName, mOrganizer, mDescription, mStartingDate, mEndingDate, mAddress,
 					mStatus);
 		}
 	}
