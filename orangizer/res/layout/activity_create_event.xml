@@ -87,7 +87,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text="@string/create_event_default_time"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
         </LinearLayout>
 
@@ -253,15 +252,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:text="@string/create_event_pick_guests"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
             <ImageButton
-                android:id="@+id/create_event_remind_b"
+                android:id="@+id/create_event_invite_b"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/ic_menu_start_conversation"
+                android:background="@drawable/ic_menu_allfriends"
                 android:contentDescription="@string/event_remind"
                 android:scaleType="fitCenter" />
 
@@ -272,7 +272,7 @@
                 android:layout_marginBottom="4dp"
                 android:layout_marginRight="@dimen/margin_small"
                 android:layout_marginTop="4dp"
-                android:layout_toLeftOf="@id/create_event_remind_b"
+                android:layout_toLeftOf="@id/create_event_invite_b"
                 android:background="@color/light_grey" />
         </RelativeLayout>
     </RelativeLayout>

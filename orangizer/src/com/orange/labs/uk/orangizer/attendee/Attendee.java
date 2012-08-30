@@ -14,26 +14,29 @@ public class Attendee {
 
 	private static final Logger sLogger = Logger.getLogger(Attendee.class);
 
-	private final String mName;
+	private String mName;
 
-	private final RsvpStatus mStatus;
+	private RsvpStatus mStatus;
 
-	private final String mFacebookId;
+	private String mFacebookId;
 
-	private final String mEmail;
+	private String mAddressBookId;
 
-	private final String mPhoneNumber;
+	private String mEmail;
 
-	private final String mTwitterUsername;
+	private String mPhoneNumber;
+
+	private String mTwitterUsername;
 
 	private Attendee(String name, String email, String phoneNumber, RsvpStatus status,
-			String facebookId, String twitterUsername) {
+			String facebookId, String twitterUsername, String addressBookId) {
 		mName = name;
 		mStatus = status;
 		mFacebookId = facebookId;
 		mEmail = email;
 		mPhoneNumber = phoneNumber;
 		mTwitterUsername = twitterUsername;
+		mAddressBookId = addressBookId;
 	}
 
 	public boolean hasName() {
@@ -68,11 +71,20 @@ public class Attendee {
 		return mTwitterUsername;
 	}
 
+	public void setAddressBookId(String id) {
+		mAddressBookId = id;
+	}
+
+	public String getAddressBookId() {
+		return mAddressBookId;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder("Attendee: [\n");
 		builder.append(String.format("Name: %s, \n", mName));
 		builder.append(String.format("Facebook ID: %s, \n", mFacebookId));
+		builder.append(String.format("Address Book ID: %s, \n", mAddressBookId));
 		builder.append(String.format("Status: %s, \n", mStatus));
 		builder.append("]");
 		return builder.toString();
@@ -92,8 +104,15 @@ public class Attendee {
 
 		private String mTwitterUsername;
 
+		private String mAddressBookId;
+
 		public Builder setName(String name) {
 			mName = name;
+			return this;
+		}
+
+		public Builder setAddressBookId(String addressBookId) {
+			mAddressBookId = addressBookId;
 			return this;
 		}
 
@@ -123,16 +142,18 @@ public class Attendee {
 		}
 
 		public Attendee build() {
-			return new Attendee(mName, mEmail, mPhoneNumber, mStatus, mFacebookId, mTwitterUsername);
+			return new Attendee(mName, mEmail, mPhoneNumber, mStatus, mFacebookId,
+					mTwitterUsername, mAddressBookId);
 		}
 
 		public Builder fromJsonObject(JSONObject object) {
 			try {
 				mFacebookId = object.has("id") ? object.getString("id") : null;
 				mName = object.has("name") ? object.getString("name") : null;
-				
+
 				// Convert status key to enum value
-				String statusKey = object.has("rsvp_status") ? object.getString("rsvp_status") : null;
+				String statusKey = object.has("rsvp_status") ? object.getString("rsvp_status")
+						: null;
 				mStatus = OrangizerUtils.valueToEnumValue(statusKey, RsvpStatus.class);
 			} catch (JSONException e) {
 				sLogger.w(String.format("This should never happen: %s", e));

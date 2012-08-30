@@ -25,7 +25,6 @@
     <string name="create_event_name_hint">Name</string>
     <string name="create_event_description_hint">Details</string>
     <string name="create_event_time">Time</string>
-    <string name="create_event_default_time">14:00</string>
     <string name="create_event_date">Date</string>
     <string name="create_event_done">Done</string>
     <string name="create_event_howlong">Duration</string>
@@ -34,5 +33,10 @@
     <string name="create_event_success">Event has been successfuly posted</string>
     <string name="create_event_ko">Event could not been posted, please retry.</string>
     <string name="create_event_posting">Posting on Facebook, please wait&#8230;</string>
+    <string name="create_event_pick_guests">Invite your friends.</string>
 
+    <string name="title_activity_choose_guests">Invite your friends</string>
+    <string name="choose_guests_no_fb_friends">No Facebook Friends</string>
+    <string name="title_section2">Facebook Friends</string>
+    <string name="title_section1">Address Book</string>
 </resources>

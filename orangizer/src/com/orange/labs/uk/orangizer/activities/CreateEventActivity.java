@@ -1,7 +1,6 @@
 package com.orange.labs.uk.orangizer.activities;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -37,13 +36,13 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 	private TextView mDescriptionTv;
 	private TextView mTimeTv;
 	private TextView mDateTv;
-	private TextView mDurationTv;
 	private TextView mAddressTv;
 	private ProgressDialog mProgressDialog;
 
 	private DependencyResolver mResolver;
 
-	private Date mStartDate = new Date();
+	private Calendar mStartCalendar;
+	private Calendar mEndCalendar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,6 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 		mDateTv = (TextView) findViewById(R.id.create_event_date_value_tv);
 		setTodayDate(mDateTv);
 
-		mDurationTv = (TextView) findViewById(R.id.create_event_howlong_value_tv);
 		mAddressTv = (TextView) findViewById(R.id.create_event_address_tv);
 
 		ImageButton mapButton = (ImageButton) findViewById(R.id.create_event_map_b);
@@ -74,6 +72,16 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 					Intent intent = OrangizerUtils.getMapIntent(location);
 					startActivity(intent);
 				}
+			}
+		});
+		
+		ImageButton inviteButton = (ImageButton) findViewById(R.id.create_event_invite_b);
+		inviteButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent guestIntent = new Intent(CreateEventActivity.this, ChooseGuestsActivity.class);
+				startActivity(guestIntent);
 			}
 		});
 
@@ -160,12 +168,15 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 	 * Set value of the text view to today's date.
 	 */
 	private void setTodayDate(TextView dateTv) {
-		final Calendar c = Calendar.getInstance();
-		int year = c.get(Calendar.YEAR);
-		int month = c.get(Calendar.MONTH);
-		int day = c.get(Calendar.DAY_OF_MONTH);
+		mStartCalendar = Calendar.getInstance();
+		int year = mStartCalendar.get(Calendar.YEAR);
+		int month = mStartCalendar.get(Calendar.MONTH);
+		int day = mStartCalendar.get(Calendar.DAY_OF_MONTH);
+		int hourOfDay = mStartCalendar.get(Calendar.HOUR_OF_DAY);
+		int minutes = mStartCalendar.get(Calendar.MINUTE);
 
 		onDateSelected(year, month, day);
+		onTimeSelected(hourOfDay, minutes);
 	}
 
 	@Override
@@ -174,8 +185,8 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 		mTimeTv.setText(String.format("%d:%s", hourOfDay, minute));
 
 		// Update the current date
-		mStartDate = new Date(Date.UTC(mStartDate.getYear(), mStartDate.getMonth(),
-				mStartDate.getDay(), hourOfDay, minutes, 0));
+		mStartCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+		mStartCalendar.set(Calendar.MINUTE, minutes);
 	}
 
 	@Override
@@ -186,9 +197,8 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 
 		mDateTv.setText(String.format("%d/%s/%d", dayOfMonth, month, year));
 
-		// Update current date
-		mStartDate = new Date(Date.UTC(year, monthOfYear, dayOfMonth, mStartDate.getHours(),
-				mStartDate.getMinutes(), mStartDate.getSeconds()));
+		mStartCalendar.set(year, monthOfYear, dayOfMonth);
+
 	}
 
 	private Event createEventFromInput() {
@@ -196,7 +206,16 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 		builder.setName(mNameTv.getText().toString());
 		builder.setDescription(mDescriptionTv.getText().toString());
 		builder.setAddress(mAddressTv.getText().toString());
-		builder.setStartingDate(mStartDate);
+
+		
+		// Generate end date
+		mEndCalendar= Calendar.getInstance();
+		mEndCalendar.setTime(mStartCalendar.getTime());
+		mEndCalendar.add(Calendar.HOUR_OF_DAY, 1);
+		
+		builder.setStartingDate(mStartCalendar.getTime());
+		builder.setEndingDate(mEndCalendar.getTime());
+
 		return builder.build();
 	}
 

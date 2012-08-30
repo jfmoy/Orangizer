@@ -11,6 +11,8 @@ import com.orange.labs.uk.orangizer.event.EventsDatabase;
 import com.orange.labs.uk.orangizer.event.FacebookEventFetcher;
 import com.orange.labs.uk.orangizer.event.FacebookEventPoster;
 import com.orange.labs.uk.orangizer.fetch.EventFetcher;
+import com.orange.labs.uk.orangizer.friends.FacebookFriendsFetcher;
+import com.orange.labs.uk.orangizer.friends.FriendsFetcher;
 import com.orange.labs.uk.orangizer.settings.SettingsManager;
 import com.orange.labs.uk.orangizer.utils.Constants;
 
@@ -90,6 +92,11 @@ public class DependencyResolverImpl implements DependencyResolver {
 	@Override
 	public EventPoster getEventPoster() {
 		return new FacebookEventPoster(getFacebook(), getEventsDatabase());
+	}
+
+	@Override
+	public FriendsFetcher getFriendsFetcher() {
+		return new FacebookFriendsFetcher(getFacebook());
 	}
 
 

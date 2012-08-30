@@ -3,6 +3,7 @@ package com.orange.labs.uk.orangizer.activities;
 import java.text.DateFormat;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
 import com.orange.labs.uk.orangizer.R;
 import com.orange.labs.uk.orangizer.callback.Callback;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolver;
@@ -49,6 +51,7 @@ public class EventActivity extends SherlockActivity {
 		mEventsDb = mDependencyResolver.getEventsDatabase();
 	}
 
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -78,8 +81,15 @@ public class EventActivity extends SherlockActivity {
 
 				@Override
 				public void onFailure(Exception e) {
-					TextView attendeesTv = (TextView) findViewById(R.id.event_attendees_tv);
-					attendeesTv.setText(getString(R.string.event_attending_error));
+					runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							TextView attendeesTv = (TextView) findViewById(R.id.event_attendees_tv);
+							attendeesTv.setText(getString(R.string.event_attending_error));
+							
+						}
+					});
 				}
 			});
 
@@ -123,7 +133,7 @@ public class EventActivity extends SherlockActivity {
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
-
+	
 	private class ReminderButtonClickListener implements View.OnClickListener {
 
 		@Override

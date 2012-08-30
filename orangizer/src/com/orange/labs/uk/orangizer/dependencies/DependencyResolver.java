@@ -7,6 +7,7 @@ import com.orange.labs.uk.orangizer.attendee.InvitedFetcher;
 import com.orange.labs.uk.orangizer.event.EventPoster;
 import com.orange.labs.uk.orangizer.event.EventsDatabase;
 import com.orange.labs.uk.orangizer.fetch.EventFetcher;
+import com.orange.labs.uk.orangizer.friends.FriendsFetcher;
 import com.orange.labs.uk.orangizer.settings.SettingsManager;
 
 public interface DependencyResolver {
@@ -31,5 +32,7 @@ public interface DependencyResolver {
 	
 	/** Return the Facebook Event Poster */
 	public EventPoster getEventPoster();
-
+	
+	/** Return the Facebook Friends Fetcher */
+	public FriendsFetcher getFriendsFetcher();
 }
