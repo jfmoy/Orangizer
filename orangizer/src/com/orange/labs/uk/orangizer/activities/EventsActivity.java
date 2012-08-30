@@ -74,6 +74,7 @@ public class EventsActivity extends SherlockListActivity {
 		}
 
 		if (!mFacebook.isSessionValid()) {
+			sLogger.i("Session is invalid, authorizing");
 			mFacebook.authorize(this, new String[] { "user_events", "create_event" },
 					new FacebookDialogListener());
 		}
@@ -97,10 +98,11 @@ public class EventsActivity extends SherlockListActivity {
 
 				@Override
 				public void onComplete(Bundle values) {
+					sLogger.i("Extending token");
 					fetchFacebookEvents();
 				}
 			});
-		} else {
+		} else if (mFacebook.isSessionValid()){
 			fetchFacebookEvents();
 		}
 
@@ -148,6 +150,7 @@ public class EventsActivity extends SherlockListActivity {
 
 	/** Grab events from user profile */
 	private void fetchFacebookEvents() {
+		sLogger.i("Fetching Events");
 		mDependencyResolver.getEventsFetcher().fetch(new Callback<List<Event>>() {
 
 			@Override

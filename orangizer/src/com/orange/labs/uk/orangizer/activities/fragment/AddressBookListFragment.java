@@ -38,7 +38,7 @@ public class AddressBookListFragment extends SherlockListFragment {
 
 		ContentResolver cr = getActivity().getContentResolver();
 		mCursor = cr.query(ContactsContract.Contacts.CONTENT_URI, new String[] { Contacts._ID,
-				Contacts.DISPLAY_NAME }, withPhone(), null, null);
+				Contacts.DISPLAY_NAME }, withPhone(), null, Contacts.DISPLAY_NAME + " ASC");
 		getActivity().startManagingCursor(mCursor);
 
 		setListAdapter(new SimpleCursorAdapter(getActivity(),

@@ -1,5 +1,6 @@
 package com.orange.labs.uk.orangizer.activities.fragment;
 
+import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
@@ -42,6 +43,7 @@ public class FriendsListFragment extends SherlockListFragment {
 
 			@Override
 			public void onSuccess(List<Friend> result) {
+				Collections.sort(result);
 				mFriends = result;
 				if (mFriends != null) {
 					getActivity().runOnUiThread(new Runnable() {

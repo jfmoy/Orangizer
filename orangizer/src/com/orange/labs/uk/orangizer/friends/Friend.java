@@ -27,7 +27,7 @@ public class Friend implements Comparable<Friend>, Parcelable {
 
 	@Override
 	public int compareTo(Friend oFriend) {
-		return getName().compareTo(oFriend.getName()) + getId().compareTo(oFriend.getId());
+		return getName().compareTo(oFriend.getName());
 	}
 
 	@Override
