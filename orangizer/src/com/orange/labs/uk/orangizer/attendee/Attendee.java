@@ -164,4 +164,8 @@ public class Attendee {
 
 	}
 
+	public boolean hasFacebookId() {
+		return (mFacebookId != null && mFacebookId.length() >0);
+	}
+
 }

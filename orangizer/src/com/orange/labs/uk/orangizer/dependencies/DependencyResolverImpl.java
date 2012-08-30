@@ -6,6 +6,7 @@ import com.facebook.android.Facebook;
 import com.orange.labs.uk.orangizer.attendee.InvitedFetcher;
 import com.orange.labs.uk.orangizer.attendee.FacebookInvitedFetcher;
 import com.orange.labs.uk.orangizer.db.DatabaseHelper;
+import com.orange.labs.uk.orangizer.event.EventCreator;
 import com.orange.labs.uk.orangizer.event.EventPoster;
 import com.orange.labs.uk.orangizer.event.EventsDatabase;
 import com.orange.labs.uk.orangizer.event.FacebookEventFetcher;
@@ -97,6 +98,11 @@ public class DependencyResolverImpl implements DependencyResolver {
 	@Override
 	public FriendsFetcher getFriendsFetcher() {
 		return new FacebookFriendsFetcher(getFacebook());
+	}
+
+	@Override
+	public EventCreator getEventCreator() {
+		return new EventCreator();
 	}
 
 

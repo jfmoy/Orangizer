@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.facebook.android.Facebook;
 import com.orange.labs.uk.orangizer.attendee.InvitedFetcher;
+import com.orange.labs.uk.orangizer.event.EventCreator;
 import com.orange.labs.uk.orangizer.event.EventPoster;
 import com.orange.labs.uk.orangizer.event.EventsDatabase;
 import com.orange.labs.uk.orangizer.fetch.EventFetcher;
@@ -35,4 +36,7 @@ public interface DependencyResolver {
 	
 	/** Return the Facebook Friends Fetcher */
 	public FriendsFetcher getFriendsFetcher();
+
+	/** Return the EventCreator, responsible of creating and notifying of the event */
+	public EventCreator getEventCreator();
 }

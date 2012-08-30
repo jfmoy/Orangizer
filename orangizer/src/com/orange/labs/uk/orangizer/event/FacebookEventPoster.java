@@ -68,6 +68,7 @@ public class FacebookEventPoster implements EventPoster {
 					mEventsDb.insert(mEvent);
 
 					mCallback.onSuccess(mEvent);
+					return;
 				}
 			} catch (JSONException e) {
 				// Json error, should not happen.

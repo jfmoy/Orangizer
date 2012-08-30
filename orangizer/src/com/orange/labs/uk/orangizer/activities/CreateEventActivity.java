@@ -137,7 +137,7 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 			}
 
 			mProgressDialog.show();
-			mResolver.getEventPoster().post(event, new Callback<Event>() {
+			mResolver.getEventCreator().create(event, new Callback<Event>() {
 
 				@Override
 				public void onSuccess(Event result) {
