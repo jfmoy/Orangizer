@@ -2,7 +2,7 @@
     
     <item android:id="@+id/events_menu_add"
         android:title="@string/events_menu_add"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/ic_menu_add"
         android:showAsAction="always" />
     
     <item android:id="@+id/events_menu_refresh"

@@ -187,8 +187,6 @@ public class EventsActivity extends SherlockListActivity {
 			// Store access token and expires
 			mSettingsManager.setFacebookToken(mFacebook.getAccessToken());
 			mSettingsManager.setFacebookTokenExpires(mFacebook.getAccessExpires());
-
-			fetchFacebookEvents();
 		}
 
 		@Override

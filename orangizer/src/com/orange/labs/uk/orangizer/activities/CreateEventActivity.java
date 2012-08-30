@@ -41,6 +41,7 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 	private TextView mTimeTv;
 	private TextView mDateTv;
 	private TextView mAddressTv;
+	private TextView mAttendeesTv;
 	private ProgressDialog mProgressDialog;
 
 	private DependencyResolver mResolver;
@@ -61,6 +62,7 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 		mNameTv = (TextView) findViewById(R.id.create_event_name_tv);
 		mDescriptionTv = (TextView) findViewById(R.id.create_event_description_tv);
 		mTimeTv = (TextView) findViewById(R.id.create_event_time_value_tv);
+		mAttendeesTv = (TextView) findViewById(R.id.create_event_attendees_tv);
 
 		mDateTv = (TextView) findViewById(R.id.create_event_date_value_tv);
 		setTodayDate(mDateTv);
@@ -197,6 +199,9 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 						.setAddressBookId(friend.getId()).build());
 			}
 			mAttendees = attendees;
+			if (mAttendees != null && mAttendees.size() > 0) {
+				mAttendeesTv.setText(getString(R.string.create_event_attendees, mAttendees.size()));
+			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
