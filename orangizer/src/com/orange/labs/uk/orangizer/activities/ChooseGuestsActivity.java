@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -29,6 +31,11 @@ public class ChooseGuestsActivity extends SherlockFragmentActivity implements
 
 	private static final Logger sLogger = Logger.getLogger(ChooseGuestsActivity.class);
 
+	public static final String FACEBOOK_FRIENDS_KEY = "facebook_friends";
+	public static final String ADDRESSBOOK_FRIENDS_KEY = "addressbook_friends";
+
+	public static final int PICK_GUESTS = 0;
+	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
 	 * sections. We use a {@link android.support.v4.app.FragmentPagerAdapter} derivative, which will
@@ -92,10 +99,19 @@ public class ChooseGuestsActivity extends SherlockFragmentActivity implements
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		if (item.getItemId() == R.id.choose_guests_menu_done) {
+			Intent intent = generateResultIntent();
+			setResult(RESULT_OK, intent);
 			finish();
 		}
 
 		return super.onMenuItemSelected(featureId, item);
+	}
+
+	private Intent generateResultIntent() {
+		Intent intent = new Intent();
+		intent.putExtra(FACEBOOK_FRIENDS_KEY, new ArrayList<Friend>(mFacebookFriends));
+		intent.putExtra(ADDRESSBOOK_FRIENDS_KEY, new ArrayList<Friend>(mAddressBookFriends));
+		return intent;
 	}
 
 	/**

@@ -3,7 +3,6 @@ package com.orange.labs.uk.orangizer.activities;
 import java.text.DateFormat;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
 import com.orange.labs.uk.orangizer.R;
 import com.orange.labs.uk.orangizer.callback.Callback;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolver;

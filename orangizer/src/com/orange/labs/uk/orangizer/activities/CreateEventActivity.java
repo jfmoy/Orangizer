@@ -1,6 +1,8 @@
 package com.orange.labs.uk.orangizer.activities;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -20,10 +22,12 @@ import com.orange.labs.uk.orangizer.activities.fragment.DatePickerFragment;
 import com.orange.labs.uk.orangizer.activities.fragment.DatePickerFragment.OnDateSelected;
 import com.orange.labs.uk.orangizer.activities.fragment.TimePickerFragment;
 import com.orange.labs.uk.orangizer.activities.fragment.TimePickerFragment.OnTimeSelected;
+import com.orange.labs.uk.orangizer.attendee.Attendee;
 import com.orange.labs.uk.orangizer.callback.Callback;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolver;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolverImpl;
 import com.orange.labs.uk.orangizer.event.Event;
+import com.orange.labs.uk.orangizer.friends.Friend;
 import com.orange.labs.uk.orangizer.utils.Logger;
 import com.orange.labs.uk.orangizer.utils.OrangizerUtils;
 
@@ -43,6 +47,7 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 
 	private Calendar mStartCalendar;
 	private Calendar mEndCalendar;
+	private List<Attendee> mAttendees;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,14 +79,15 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 				}
 			}
 		});
-		
+
 		ImageButton inviteButton = (ImageButton) findViewById(R.id.create_event_invite_b);
 		inviteButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Intent guestIntent = new Intent(CreateEventActivity.this, ChooseGuestsActivity.class);
-				startActivity(guestIntent);
+				Intent guestIntent = new Intent(CreateEventActivity.this,
+						ChooseGuestsActivity.class);
+				startActivityForResult(guestIntent, ChooseGuestsActivity.PICK_GUESTS);
 			}
 		});
 
@@ -125,6 +131,10 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 			startActivity(eventsIntent);
 		} else if (item.getItemId() == R.id.create_event_menu_done) {
 			Event event = createEventFromInput();
+			
+			if (mAttendees != null) {
+				event.setAttendees(mAttendees);
+			}
 
 			mProgressDialog.show();
 			mResolver.getEventPoster().post(event, new Callback<Event>() {
@@ -162,6 +172,33 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 			});
 		}
 		return super.onMenuItemSelected(featureId, item);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// Generate list of attendees
+		if (requestCode == ChooseGuestsActivity.PICK_GUESTS && resultCode == RESULT_OK) {
+			sLogger.d(data.getExtras().toString());
+			List<Friend> facebookFriends = data.getExtras().getParcelableArrayList(
+					ChooseGuestsActivity.FACEBOOK_FRIENDS_KEY);
+			List<Friend> addressBookFriends = data.getExtras().getParcelableArrayList(
+					ChooseGuestsActivity.ADDRESSBOOK_FRIENDS_KEY);
+
+			sLogger.d(facebookFriends.toString());
+			sLogger.d(addressBookFriends.toString());
+
+			List<Attendee> attendees = new ArrayList<Attendee>();
+			for (Friend friend : facebookFriends) {
+				attendees.add(new Attendee.Builder().setName(friend.getName())
+						.setFacebookId(friend.getId()).build());
+			}
+			for (Friend friend : addressBookFriends) {
+				attendees.add(new Attendee.Builder().setName(friend.getName())
+						.setAddressBookId(friend.getId()).build());
+			}
+			mAttendees = attendees;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	/**
@@ -207,12 +244,11 @@ public class CreateEventActivity extends SherlockFragmentActivity implements OnT
 		builder.setDescription(mDescriptionTv.getText().toString());
 		builder.setAddress(mAddressTv.getText().toString());
 
-		
 		// Generate end date
-		mEndCalendar= Calendar.getInstance();
+		mEndCalendar = Calendar.getInstance();
 		mEndCalendar.setTime(mStartCalendar.getTime());
 		mEndCalendar.add(Calendar.HOUR_OF_DAY, 1);
-		
+
 		builder.setStartingDate(mStartCalendar.getTime());
 		builder.setEndingDate(mEndCalendar.getTime());
 

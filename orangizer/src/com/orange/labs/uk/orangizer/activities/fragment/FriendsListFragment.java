@@ -13,7 +13,6 @@ import com.orange.labs.uk.orangizer.callback.Callback;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolver;
 import com.orange.labs.uk.orangizer.dependencies.DependencyResolverImpl;
 import com.orange.labs.uk.orangizer.friends.Friend;
-import com.orange.labs.uk.orangizer.utils.Logger;
 
 public class FriendsListFragment extends SherlockListFragment {
 
