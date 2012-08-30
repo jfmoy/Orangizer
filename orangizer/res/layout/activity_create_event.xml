@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/create_event_sv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/create_event_what_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/event_what"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/orange" />
+
+        <View
+            android:id="@+id/create_event_what_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/create_event_what_tv"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:background="@color/orange" />
+        
+        <EditText
+            android:id="@+id/create_event_name_tv"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_event_what_separator"
+            android:hint="@string/create_event_name_hint"
+            android:inputType="textAutoCorrect"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            />
+
+        <EditText
+            android:id="@+id/create_event_description_tv"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_event_name_tv"
+            android:hint="@string/create_event_description_hint"
+            android:inputType="textMultiLine"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+        <TextView
+            android:id="@+id/create_event_when_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_event_description_tv"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/event_when"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/orange" />
+
+        <View
+            android:id="@+id/create_event_when_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/create_event_when_tv"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:background="@color/orange" />
+
+        <LinearLayout
+            android:id="@+id/create_event_time_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_event_when_separator"
+            android:clickable="true"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/create_event_time_title_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/create_event_time"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+            <TextView
+                android:id="@+id/create_event_time_value_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/create_event_time_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/create_event_time_ll"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@color/light_grey" />
+
+        <LinearLayout
+            android:id="@+id/create_event_date_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_event_time_separator"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/create_event_date_title_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/create_event_date"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+            <TextView
+                android:id="@+id/create_event_date_value_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/create_event_date_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/create_event_date_ll"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@color/light_grey" />
+        
+        <LinearLayout
+            android:id="@+id/create_event_howlong_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_event_date_separator"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/create_event_howlong_title_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/create_event_howlong"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+            <TextView
+                android:id="@+id/create_event_howlong_value_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@string/create_event_howlong_default"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+        </LinearLayout>
+        
+        <View
+            android:id="@+id/create_event_howlong_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/create_event_howlong_ll"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@color/light_grey" />
+
+        <TextView
+            android:id="@+id/create_event_where_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_event_howlong_separator"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/event_where"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/orange" />
+
+        <View
+            android:id="@+id/create_event_address_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/create_event_where_tv"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:background="@color/orange" />
+
+        <RelativeLayout
+            android:id="@+id/create_event_address_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/create_event_address_separator" >
+
+            <ImageButton
+                android:id="@+id/create_event_map_b"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:background="@android:drawable/ic_menu_mapmode"
+                android:contentDescription="@string/event_map"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/create_event_map_separator"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="@dimen/margin_small"
+                android:layout_marginTop="4dp"
+                android:layout_toLeftOf="@id/create_event_map_b"
+                android:background="@color/light_grey" />
+
+            <EditText
+                android:id="@+id/create_event_address_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/create_event_map_separator"
+                android:hint="@string/create_event_address_hint"
+                android:inputType="textPostalAddress"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/create_event_who_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_event_address_ll"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/event_whoscoming"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/orange" />
+
+        <View
+            android:id="@+id/create_event_who_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/create_event_who_tv"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:background="@color/orange" />
+
+        <RelativeLayout
+            android:id="@+id/create_event_guests_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/create_event_who_separator" >
+
+            <TextView
+                android:id="@+id/create_event_attendees_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/create_event_pick_guests"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+            <ImageButton
+                android:id="@+id/create_event_invite_b"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_menu_allfriends"
+                android:contentDescription="@string/event_remind"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/create_event_attendees_separator"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="@dimen/margin_small"
+                android:layout_marginTop="4dp"
+                android:layout_toLeftOf="@id/create_event_invite_b"
+                android:background="@color/light_grey" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>

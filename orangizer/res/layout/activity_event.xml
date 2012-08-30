@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/event_sv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp" >
+        
+        <TextView
+            android:id="@+id/event_whosinviting_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/event_whosinviting"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/orange" />
+
+        <View
+            android:id="@+id/event_whosinviting_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/event_whosinviting_tv"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:background="@color/orange" />
+
+        <TextView
+            android:id="@+id/event_organizer_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_whosinviting_separator"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+        <TextView
+            android:id="@+id/event_what_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_organizer_tv"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/event_what"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/orange" />
+
+        <View
+            android:id="@+id/event_what_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/event_what_tv"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:background="@color/orange" />
+
+        <TextView
+            android:id="@+id/event_description_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_what_separator"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+        
+        <TextView
+            android:id="@+id/event_when_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_description_tv"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/event_when"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/orange" />
+
+        <View
+            android:id="@+id/event_when_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/event_when_tv"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:background="@color/orange" />
+
+        <TextView
+            android:id="@+id/event_starttime_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_when_separator"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+        <TextView
+            android:id="@+id/event_where_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_starttime_tv"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/event_where"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/orange" />
+
+        <View
+            android:id="@+id/event_address_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/event_where_tv"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:background="@color/orange" />
+
+        <RelativeLayout
+            android:id="@+id/event_address_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/event_address_separator" >
+
+            <ImageButton
+                android:id="@+id/event_map_b"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:background="@android:drawable/ic_menu_mapmode"
+                android:contentDescription="@string/event_map"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/event_map_separator"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="@dimen/margin_small"
+                android:layout_marginTop="4dp"
+                android:layout_toLeftOf="@id/event_map_b"
+                android:background="@color/light_grey" />
+            
+            <TextView
+                android:id="@+id/event_address_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/event_map_separator"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/event_who_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/event_address_ll"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/event_whoscoming"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/orange" />
+
+        <View
+            android:id="@+id/event_who_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/event_who_tv"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:background="@color/orange" />
+
+        <RelativeLayout
+            android:id="@+id/event_guests_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/event_who_separator" >
+
+            <TextView
+                android:id="@+id/event_attendees_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+
+            <ImageButton
+                android:id="@+id/event_remind_b"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_menu_start_conversation"
+                android:contentDescription="@string/event_remind"
+                android:scaleType="fitCenter" />
+
+            <View
+                android:id="@+id/event_attendees_separator"
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="@dimen/margin_small"
+                android:layout_marginTop="4dp"
+                android:layout_toLeftOf="@id/event_remind_b"
+                android:background="@color/light_grey" />
+        </RelativeLayout>
+    </RelativeLayout>
+</ScrollView>
+
