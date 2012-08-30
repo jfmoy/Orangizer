@@ -168,4 +168,8 @@ public class Attendee {
 		return (mFacebookId != null && mFacebookId.length() >0);
 	}
 
+	public boolean hasAddressBookId() {
+		return (mAddressBookId != null && mAddressBookId.length() > 0);
+	}
+
 }
